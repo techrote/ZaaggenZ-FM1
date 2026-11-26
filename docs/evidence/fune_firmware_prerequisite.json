@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "verified_utc": "2026-11-26T23:32:55.547939+00:00",
+  "physical_hardware_qualified": false,
+  "official_release": {
+    "tag": "v0.0.2-alpha",
+    "released_at": "2026-11-19T12:00:57Z",
+    "tag_commit": "dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b",
+    "tag_api": "https://api.github.com/repos/hugelton/Fune/git/ref/tags/v0.0.2-alpha",
+    "release": "https://github.com/hugelton/Fune/releases/tag/v0.0.2-alpha",
+    "asset": "https://github.com/hugelton/Fune/releases/download/v0.0.2-alpha/fune-fm1.fwsc",
+    "asset_bytes": 612223,
+    "asset_sha256": "12bd8bc3610694b91943ae6f6f1220495cb11179fd6405553f2196c479d530db",
+    "asset_download_hash_verified": true,
+    "product": "FM-1_1300",
+    "release_requirements": [
+      "Official M-VAVE bootloader",
+      "Tested on early-flash units only",
+      "Not compatible with Felucca or derived custom firmware"
+    ],
+    "release_states_same_image_as_web_installer": true
+  },
+  "unchanged_source_build": {
+    "fune_revision": "dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b",
+    "source_worktree_clean": true,
+    "command": "JIELI_TOOLCHAIN=<20260730.1> JIELI_DOCKER=0 bash platforms/fm1hw/build.sh",
+    "toolchain": "jieli-linux-toolchains-20260730.1",
+    "compiler_sha256": "c45189ee624de0430deb0db02e6dce171fb5538e7fe323e3964dc8ac6236240f",
+    "upstream_build_gates_passed": [
+      "linker memory bounds",
+      "RAM-resident flash code contains no calls",
+      "pi32v2 multiply erratum scan",
+      "integer drawing scan",
+      "image entry point, section bounds and RAM headroom"
+    ],
+    "app_bytes": 452820,
+    "app_sha256": "5652d1b8fbca8fa7ae31c1009d24c853047598982929d25d14def241efe63027",
+    "app_slot_bytes": 581564,
+    "app_slot_free_bytes": 128744,
+    "ram_occupied_including_plugin_pool_bytes": 326332,
+    "ram_total_bytes": 442368,
+    "ram_remaining_below_stack_guards_bytes": 116036,
+    "ram_text_bytes": 3000,
+    "data_bytes": 1420,
+    "bss_bytes": 322864,
+    "loader_bytes": 9067,
+    "loader_sha256": "2fb524631f0f9b4ab08389b25bc7eecc38d7ce7c06a7070288d1ecf6481d7194",
+    "full_package_bytes": 612223,
+    "full_package_sha256": "318279c8eb38e7b035455a1e12b5394df100705ae5e8682c6b9947295002e701",
+    "full_package_distribution": "Build-only; owner uses the official upstream release",
+    "sdk_files": {
+      "fune_revision": "dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b",
+      "sdk_revision_from_upstream_get_sdk": "d179b4484759423312073f5fbb232501aa491047",
+      "files_recovered_from": "https://github.com/hugelton/Fune/releases/download/v0.0.2-alpha/fune-fm1.fwsc",
+      "official_package_sha256": "12bd8bc3610694b91943ae6f6f1220495cb11179fd6405553f2196c479d530db",
+      "files": {
+        "uboot.boot": "4e3b4c220dc96641cb5a723f41e68ce41d5261ae9434bb33fbd7f2c59976ded4",
+        "cfg_tool.bin": "276579954f076886a6a7694f65dc71c034a63a2c204b76749065c0ac7b010d1b",
+        "cfg/eq_cfg_hw.bin": "41167491bffed4651750719c973d2758adeb9021a5670d02d6a53c85ed80ea7d"
+      },
+      "reason": "The pinned upstream get_sdk.sh repository API returned 404. These unchanged Apache-2.0 SDK files were recovered from the authenticated official Fune release and matched every pinned SDK hash."
+    },
+    "package_command": "AC79_SDK=<verified-package-files> python3 -I third_party/felucca-bsp/tools/fm1pkg.py build/fm1/kreisel.bin build/fm1/loader/ota.bin build/fm1/kreisel.fwsc --product FM-1_1300 --board fm1"
+  },
+  "published_binary_correspondence": {
+    "complete_app_byte_identical": false,
+    "complete_app_difference_cause": "Not established; no complete upstream firmware reproducibility claim.",
+    "update_loader_byte_identical": true,
+    "plugin_loader_functions_byte_identical": [
+      {
+        "symbol": "pl_erase",
+        "address": "0x2004a60",
+        "bytes": 144,
+        "sha256": "a1d38a566f4a13106fb1ca0db514b2d3e51f089b12498e1e7f537767f84bb342"
+      },
+      {
+        "symbol": "pl_map",
+        "address": "0x2004940",
+        "bytes": 98,
+        "sha256": "64088fb58f3eaafc15ff8f1e8dea5316c6b30b6c680276fc0dde10ee478a3837"
+      },
+      {
+        "symbol": "pl_open_code",
+        "address": "0x2004b5a",
+        "bytes": 52,
+        "sha256": "4543a1c893b6bd21f89f97813c88887410c4efeb0c2e9ae1fb757de3ff2407d3"
+      },
+      {
+        "symbol": "pl_prog",
+        "address": "0x2004b1e",
+        "bytes": 60,
+        "sha256": "040e0e89c8072ad19a26e8da4c9b48e6969735b0a09475da02bc197363db99e4"
+      },
+      {
+        "symbol": "pl_rescan",
+        "address": "0x20049a2",
+        "bytes": 190,
+        "sha256": "02118e57cff68f5fcc3519fcec69877d23012662db750d04f372a71815bff4a5"
+      },
+      {
+        "symbol": "k_image_load",
+        "address": "0x2039a76",
+        "bytes": 262,
+        "sha256": "d9cbac85aaa7803bb86ca7210b3fe7215e9560bf4712facbe2e8437726954315"
+      },
+      {
+        "symbol": "k_image_check",
+        "address": "0x203958e",
+        "bytes": 624,
+        "sha256": "c35a1684a6d48445ec820c9739e93f18a19f8d869d7fd3bfe478c2e8e676c93a"
+      }
+    ],
+    "plugin_pool_record_address": "0x203e2d8",
+    "plugin_pool_record_words": [
+      "0x1c08000",
+      "0x1c08000",
+      "0x800"
+    ]
+  },
+  "plugin_reservations": {
+    "ram_start": "0x1c08000",
+    "ram_end_exclusive": "0x1c08800",
+    "ram_pool_bytes": 2048,
+    "zaaggenz_ram_bytes": 1792,
+    "ram_remaining_bytes": 256,
+    "application_flash_range": "[0x004000, 0x097000)",
+    "plugin_flash_range": "[0x097000, 0x0E0000)",
+    "plugin_flash_total_bytes": 299008,
+    "zaaggenz_flash_sectors": 67,
+    "zaaggenz_flash_allocation_bytes": 274432,
+    "plugin_flash_free_bytes": 24576,
+    "update_loader_staging_start": "0x0E0000",
+    "song_preset_save_range": "[0x0EA000, 0x0FC000)",
+    "user_stack_range": "[0x01C74100, 0x01C7A000)",
+    "system_stack_range": "[0x01C7A100, 0x01C7C000)",
+    "separation_basis": "Unchanged pinned linker script and fm1_plugins.c; actual linked symbols and published pool record verified"
+  },
+  "qualification_limit": "No device was connected or flashed. Published firmware availability, target compilation, matching plugin loader machine code and static reservations do not establish physical plugin installation, audio quality, timing, flash-chip compatibility or stack high-water."
+}

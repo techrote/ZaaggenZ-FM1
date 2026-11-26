@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "sources": [
+    {"source_id": "locked_bloom"},
+    {"source_id": "zaag.bloom-bark"},
+    {"source_id": "zaag.formant-snarl"},
+    {"source_id": "zaag.upper-chop"},
+    {"source_id": "zaag.split-maul"},
+    {"source_id": "zaag.crushed-teeth"},
+    {"source_id": "zaag.harmonic-rip"}
+  ]
+}

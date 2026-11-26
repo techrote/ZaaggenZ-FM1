@@ -1,0 +1,1268 @@
+{
+  "gain_policy": "all source/reference WAVs explicit fixed 1/8; native probe likewise trimmed 1/8",
+  "implementation_sha256": {
+    "include/zg/source_bank.h": "fd08951a90c6577bba5cbffed7612d446f88424b87166cbe93c162367b2c34c1",
+    "src/dsp.c": "3551d12f5f13c4822e2865a45fd6fbea77f0161bdffbcc1228640cd812946b6c",
+    "src/source_bank.c": "4c4e3b5e962224e43e5b8ecb04f959edd73f9e54cd05f207a0f0303287576b25",
+    "src/source_bank_data.inc": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
+    "tests/dsp/dsp_probe.c": "fc11006eefeffc5b099b307adeecbfdff3212963552cb5a90fbf671df6db00a7",
+    "tests/source_probe.c": "13723756b0bcab1a77e5d42186a835eb0209e7a8fb7a2ee5f7303d2601de1e27"
+  },
+  "interpretation": "spectral/temporal differences are not preference scores",
+  "qualification": "host C execution; no FM-1 timing or listening pass inferred",
+  "reference_commit": "d7e580c190d00e1d00a573a6b845c75ddddc1d4c",
+  "sources": [
+    {
+      "c_image_metrics": {
+        "centroid_hz": 122.07251790759841,
+        "crest_db": 8.771049809344403,
+        "energy_above_6khz": 0.001939882081701443,
+        "peak": 0.119537353515625,
+        "rms": 0.043546288561722546,
+        "zero_crossings_per_second": 417.2413793103449
+      },
+      "c_image_reference": {
+        "correlation": 0.9999096800791621,
+        "rms_error": 0.0005847860901757957,
+        "samples": 12823,
+        "snr_db": 37.42382580220672
+      },
+      "source_id": "locked_bloom",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.073974609375,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 5684,
+        "rendered_samples": 49784
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.9999096800791621,
+            "rms_error": 0.0005847860901757957,
+            "samples": 12823,
+            "snr_db": 37.42382580220672
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.9999096800791621,
+            "rms_error": 0.0005847860901757957,
+            "samples": 12823,
+            "snr_db": 37.42382580220672
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9998067836708653,
+            "rms_error": 0.0008545357242888326,
+            "samples": 9410,
+            "snr_db": 34.129180615608384
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9999116397801905,
+            "rms_error": 0.0005779083912173022,
+            "samples": 9410,
+            "snr_db": 37.526605073076134
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.99990968558358,
+            "rms_error": 0.0005846683801071967,
+            "samples": 8549,
+            "snr_db": 37.425036539521976
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9999032259522684,
+            "rms_error": 0.0006050588908440952,
+            "samples": 8549,
+            "snr_db": 37.127275742335385
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999106305695811,
+            "rms_error": 0.000581529388232897,
+            "samples": 6412,
+            "snr_db": 37.47040323666509
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.999807023397559,
+            "rms_error": 0.0008543067539505491,
+            "samples": 6412,
+            "snr_db": 34.12955978396246
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999071816500578,
+            "rms_error": 0.0005919041069913417,
+            "samples": 3206,
+            "snr_db": 37.30871707372952
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9991513936493273,
+            "rms_error": 0.0017927823987122316,
+            "samples": 3206,
+            "snr_db": 27.68319254726569
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999030065762262,
+            "rms_error": 0.0006045725690760224,
+            "samples": 1603,
+            "snr_db": 37.108055281943386
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.9981083531202148,
+            "rms_error": 0.0026833962261894814,
+            "samples": 1603,
+            "snr_db": 24.163327954498467
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999056077163243,
+            "rms_error": 0.0005990436522425297,
+            "samples": 401,
+            "snr_db": 37.10985806586954
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.9890473416834599,
+            "rms_error": 0.00645738958974392,
+            "samples": 401,
+            "snr_db": 16.457887692101448
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9998822824716375,
+            "rms_error": 0.0005934977040917563,
+            "samples": 51,
+            "snr_db": 36.248982697686955
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.9111348317225183,
+            "rms_error": 0.018045734469985225,
+            "samples": 51,
+            "snr_db": 6.589872307801825
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9848380995313675,
+            "rms_error": 0.006451942189118653,
+            "samples": 32,
+            "snr_db": 14.07107158233967
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": 0.8659836055526915,
+            "rms_error": 0.02084869891849524,
+            "samples": 32,
+            "snr_db": 3.883301776984622
+          }
+        }
+      ]
+    },
+    {
+      "c_image_metrics": {
+        "centroid_hz": 2256.696568710506,
+        "crest_db": 7.3380441896597,
+        "energy_above_6khz": 0.0632808867325688,
+        "peak": 0.45355224609375,
+        "rms": 0.19486108326113846,
+        "zero_crossings_per_second": 3568.9655172413795
+      },
+      "c_image_reference": {
+        "correlation": 0.9999136309441287,
+        "rms_error": 0.0025006772053925946,
+        "samples": 13370,
+        "snr_db": 37.81124452641078
+      },
+      "native_fidelity_note": "causal 16-partial reinterpretation at 48 Hz; temporal/level mismatch is intentional, not an exact source replacement",
+      "native_metrics": {
+        "centroid_hz": 360.33621456457183,
+        "crest_db": 8.927824345965073,
+        "energy_above_6khz": 0.01196129607626436,
+        "peak": 0.0613861083984375,
+        "rms": 0.0219623538590498,
+        "zero_crossings_per_second": 748.2758620689656
+      },
+      "source_id": "zaag.bloom-bark",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.478790283203125,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 6167,
+        "rendered_samples": 50267
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.9999136309441287,
+            "rms_error": 0.0025006772053925946,
+            "samples": 13370,
+            "snr_db": 37.81124452641078
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.9999136309441287,
+            "rms_error": 0.0025006772053925946,
+            "samples": 13370,
+            "snr_db": 37.81124452641078
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9949554933054934,
+            "rms_error": 0.019691279399002802,
+            "samples": 9812,
+            "snr_db": 19.85111039847282
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9982504787672745,
+            "rms_error": 0.011441574945856531,
+            "samples": 9812,
+            "snr_db": 24.566872892712887
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999142887151089,
+            "rms_error": 0.0024756816020859614,
+            "samples": 8914,
+            "snr_db": 37.846342972838954
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9970080991080499,
+            "rms_error": 0.014638772415733936,
+            "samples": 8914,
+            "snr_db": 22.410145577557152
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999143307159764,
+            "rms_error": 0.0024580364357475854,
+            "samples": 6685,
+            "snr_db": 37.84539202738933
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.989118890677138,
+            "rms_error": 0.027963058665521776,
+            "samples": 6685,
+            "snr_db": 16.72546487466224
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999137030002463,
+            "rms_error": 0.002392318152591374,
+            "samples": 3343,
+            "snr_db": 37.81028821311046
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9616209135871997,
+            "rms_error": 0.05233885741323583,
+            "samples": 3343,
+            "snr_db": 11.010182175903903
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999152501991728,
+            "rms_error": 0.00211454649905024,
+            "samples": 1672,
+            "snr_db": 37.953610498166995
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.8792717097091399,
+            "rms_error": 0.09122464646455837,
+            "samples": 1672,
+            "snr_db": 5.255711514174078
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9998896765149932,
+            "rms_error": 0.0008612728481584987,
+            "samples": 418,
+            "snr_db": 38.22265505749502
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.3278451594214001,
+            "rms_error": 0.18176084950760601,
+            "samples": 418,
+            "snr_db": -8.264536695229802
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.99986266702483,
+            "rms_error": 0.0007063641958647418,
+            "samples": 53,
+            "snr_db": 38.16558136570006
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.33785498992327334,
+            "rms_error": 0.17215907136439987,
+            "samples": 53,
+            "snr_db": -9.572443309153657
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9876146243795136,
+            "rms_error": 0.006835859142491601,
+            "samples": 33,
+            "snr_db": 17.939986642464117
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": -0.058318996073682995,
+            "rms_error": 0.20083546210959025,
+            "samples": 33,
+            "snr_db": -11.420959251376528
+          }
+        }
+      ]
+    },
+    {
+      "c_image_metrics": {
+        "centroid_hz": 2361.367356796211,
+        "crest_db": 5.719340634946909,
+        "energy_above_6khz": 0.06781276880606789,
+        "peak": 0.279083251953125,
+        "rms": 0.1444663642382358,
+        "zero_crossings_per_second": 3075.8620689655177
+      },
+      "c_image_reference": {
+        "correlation": 0.9999133217856748,
+        "rms_error": 0.001891344617655532,
+        "samples": 13370,
+        "snr_db": 37.66538595795962
+      },
+      "native_fidelity_note": "causal 16-partial reinterpretation at 48 Hz; temporal/level mismatch is intentional, not an exact source replacement",
+      "native_metrics": {
+        "centroid_hz": 2320.277183076163,
+        "crest_db": 7.7700281998758145,
+        "energy_above_6khz": 0.08846368168243247,
+        "peak": 0.06011962890625,
+        "rms": 0.024576208407596615,
+        "zero_crossings_per_second": 5579.310344827587
+      },
+      "source_id": "zaag.formant-snarl",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.360382080078125,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 6311,
+        "rendered_samples": 50411
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.9999133217856748,
+            "rms_error": 0.001891344617655532,
+            "samples": 13370,
+            "snr_db": 37.66538595795962
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.9999133217856748,
+            "rms_error": 0.001891344617655532,
+            "samples": 13370,
+            "snr_db": 37.66538595795962
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9952465159599471,
+            "rms_error": 0.01457812175489285,
+            "samples": 9812,
+            "snr_db": 19.894739991291765
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9983288378599992,
+            "rms_error": 0.008488295388076873,
+            "samples": 9812,
+            "snr_db": 24.592361765680167
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999164085377562,
+            "rms_error": 0.0018468687410841875,
+            "samples": 8914,
+            "snr_db": 37.82602492536513
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9973087670509448,
+            "rms_error": 0.010509467363179351,
+            "samples": 8914,
+            "snr_db": 22.723131423966755
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999135127645843,
+            "rms_error": 0.0018664641127838302,
+            "samples": 6685,
+            "snr_db": 37.67262194859783
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.9905801061159984,
+            "rms_error": 0.01960439555660928,
+            "samples": 6685,
+            "snr_db": 17.24594569533444
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999136885542317,
+            "rms_error": 0.001792072147130709,
+            "samples": 3343,
+            "snr_db": 37.6879477229946
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9588548957579718,
+            "rms_error": 0.04077724885295782,
+            "samples": 3343,
+            "snr_db": 10.546699090616709
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999120325085803,
+            "rms_error": 0.0014796348145523005,
+            "samples": 1672,
+            "snr_db": 37.6293649688928
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.8413739898041659,
+            "rms_error": 0.07856992925201338,
+            "samples": 1672,
+            "snr_db": 3.1273285540550133
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999010433440625,
+            "rms_error": 0.0008781665735292086,
+            "samples": 418,
+            "snr_db": 37.32340392727788
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.41671570247704476,
+            "rms_error": 0.13026822523528117,
+            "samples": 418,
+            "snr_db": -6.101827957940868
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999075062767426,
+            "rms_error": 0.0006529470175721952,
+            "samples": 53,
+            "snr_db": 37.32784695447187
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.3400978218771323,
+            "rms_error": 0.1369105359737928,
+            "samples": 53,
+            "snr_db": -9.103331607732962
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9838531491545105,
+            "rms_error": 0.008014447860548677,
+            "samples": 33,
+            "snr_db": 14.605445613753528
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": 0.20666556373853684,
+            "rms_error": 0.13376790212348189,
+            "samples": 33,
+            "snr_db": -9.844120550932004
+          }
+        }
+      ]
+    },
+    {
+      "c_image_metrics": {
+        "centroid_hz": 1762.4934217644382,
+        "crest_db": 8.203345429497594,
+        "energy_above_6khz": 0.04338420038733418,
+        "peak": 0.304901123046875,
+        "rms": 0.11857462300564317,
+        "zero_crossings_per_second": 2148.2758620689656
+      },
+      "c_image_reference": {
+        "correlation": 0.999916114395268,
+        "rms_error": 0.0015258897696026794,
+        "samples": 13370,
+        "snr_db": 37.75758688275399
+      },
+      "native_fidelity_note": "causal 16-partial reinterpretation at 48 Hz; temporal/level mismatch is intentional, not an exact source replacement",
+      "native_metrics": {
+        "centroid_hz": 692.8089622531072,
+        "crest_db": 10.611718107923764,
+        "energy_above_6khz": 0.020509026803314175,
+        "peak": 0.07619476318359375,
+        "rms": 0.022456352569346943,
+        "zero_crossings_per_second": 2300.0
+      },
+      "source_id": "zaag.upper-chop",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.38275146484375,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 8037,
+        "rendered_samples": 52137
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.999916114395268,
+            "rms_error": 0.0015258897696026794,
+            "samples": 13370,
+            "snr_db": 37.75758688275399
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.999916114395268,
+            "rms_error": 0.0015258897696026794,
+            "samples": 13370,
+            "snr_db": 37.75758688275399
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.996203761541195,
+            "rms_error": 0.010466286430281796,
+            "samples": 9812,
+            "snr_db": 21.002434463052605
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9986459086364735,
+            "rms_error": 0.006197809039590182,
+            "samples": 9812,
+            "snr_db": 25.55352295899841
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999162551146997,
+            "rms_error": 0.0015171624297860146,
+            "samples": 8914,
+            "snr_db": 37.76472095615145
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9976561724502558,
+            "rms_error": 0.008025910297710498,
+            "samples": 8914,
+            "snr_db": 23.29547651672581
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999164296977313,
+            "rms_error": 0.0015095199696370863,
+            "samples": 6685,
+            "snr_db": 37.76373450277684
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.9918066619710901,
+            "rms_error": 0.015043164640115632,
+            "samples": 6685,
+            "snr_db": 17.79372758402019
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999128262871172,
+            "rms_error": 0.0015092841375910673,
+            "samples": 3343,
+            "snr_db": 37.56752713285529
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9724863328562569,
+            "rms_error": 0.027485619541593263,
+            "samples": 3343,
+            "snr_db": 12.360836673341666
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.999911487719705,
+            "rms_error": 0.0014051224978231598,
+            "samples": 1672,
+            "snr_db": 37.520559021188404
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.9137156464647983,
+            "rms_error": 0.04820454558578821,
+            "samples": 1672,
+            "snr_db": 6.813082905948046
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999161725083282,
+            "rms_error": 0.0008706707743541491,
+            "samples": 418,
+            "snr_db": 37.65709990585877
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.5851416870793853,
+            "rms_error": 0.09585356157353837,
+            "samples": 418,
+            "snr_db": -3.1779858444100313
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999075574548877,
+            "rms_error": 0.0006654930658906467,
+            "samples": 53,
+            "snr_db": 37.207999318972334
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.47917712997875417,
+            "rms_error": 0.09782361714431904,
+            "samples": 53,
+            "snr_db": -6.138004333745282
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9809835812133015,
+            "rms_error": 0.009108214695419963,
+            "samples": 33,
+            "snr_db": 13.397062974996327
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": 0.5689729510092447,
+            "rms_error": 0.10154668509704631,
+            "samples": 33,
+            "snr_db": -7.547586859350426
+          }
+        }
+      ]
+    },
+    {
+      "c_image_metrics": {
+        "centroid_hz": 867.2897248750521,
+        "crest_db": 6.676279180110991,
+        "energy_above_6khz": 0.01533250345510413,
+        "peak": 0.36383056640625,
+        "rms": 0.16868840176278718,
+        "zero_crossings_per_second": 1124.1379310344828
+      },
+      "c_image_reference": {
+        "correlation": 0.9999177545557297,
+        "rms_error": 0.002150601235178349,
+        "samples": 13370,
+        "snr_db": 37.85362236178449
+      },
+      "native_fidelity_note": "causal 16-partial reinterpretation at 48 Hz; temporal/level mismatch is intentional, not an exact source replacement",
+      "native_metrics": {
+        "centroid_hz": 341.22396561861837,
+        "crest_db": 7.631606832127585,
+        "energy_above_6khz": 0.007370051815187542,
+        "peak": 0.050403594970703125,
+        "rms": 0.020935395580690835,
+        "zero_crossings_per_second": 1172.4137931034484
+      },
+      "source_id": "zaag.split-maul",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.391998291015625,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 4911,
+        "rendered_samples": 49011
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.9999177545557297,
+            "rms_error": 0.002150601235178349,
+            "samples": 13370,
+            "snr_db": 37.85362236178449
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.9999177545557297,
+            "rms_error": 0.002150601235178349,
+            "samples": 13370,
+            "snr_db": 37.85362236178449
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9992550528539641,
+            "rms_error": 0.006521607478635907,
+            "samples": 9812,
+            "snr_db": 28.21354010097376
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9997161275877818,
+            "rms_error": 0.004016610047015231,
+            "samples": 9812,
+            "snr_db": 32.42343981619809
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999162545050763,
+            "rms_error": 0.002168674080408405,
+            "samples": 8914,
+            "snr_db": 37.77431980071579
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9996074044903404,
+            "rms_error": 0.0046985264944685075,
+            "samples": 8914,
+            "snr_db": 31.058971975790563
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999162394200152,
+            "rms_error": 0.002166809082430369,
+            "samples": 6685,
+            "snr_db": 37.773454739666924
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.9985814844571883,
+            "rms_error": 0.008919911826574025,
+            "samples": 6685,
+            "snr_db": 25.482656458122758
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999153613232601,
+            "rms_error": 0.002167641354872478,
+            "samples": 3343,
+            "snr_db": 37.726488135662784
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9948200762847845,
+            "rms_error": 0.01702403998014325,
+            "samples": 3343,
+            "snr_db": 19.824984085181082
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.999918248489227,
+            "rms_error": 0.002090648675536559,
+            "samples": 1672,
+            "snr_db": 37.85615634263417
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.9764475283592725,
+            "rms_error": 0.036285445583232566,
+            "samples": 1672,
+            "snr_db": 13.06712828420425
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999191722495812,
+            "rms_error": 0.0018404818666163817,
+            "samples": 418,
+            "snr_db": 37.92746306328238
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.8868651959905388,
+            "rms_error": 0.07832139407814502,
+            "samples": 418,
+            "snr_db": 5.348485740078926
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999190282643491,
+            "rms_error": 0.0013205979491169196,
+            "samples": 53,
+            "snr_db": 37.89872291823484
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.6868631323342536,
+            "rms_error": 0.12069025295918967,
+            "samples": 53,
+            "snr_db": -1.3193086630817392
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9712388811139543,
+            "rms_error": 0.023982012436728,
+            "samples": 33,
+            "snr_db": 11.78854592005106
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": 0.6211705428954417,
+            "rms_error": 0.13624311286191182,
+            "samples": 33,
+            "snr_db": -3.3000327579377458
+          }
+        }
+      ]
+    },
+    {
+      "c_image_metrics": {
+        "centroid_hz": 2508.4248852929036,
+        "crest_db": 3.14606230738392,
+        "energy_above_6khz": 0.09570194184247453,
+        "peak": 0.178955078125,
+        "rms": 0.12457787291342774,
+        "zero_crossings_per_second": 3148.2758620689656
+      },
+      "c_image_reference": {
+        "correlation": 0.9999155416682609,
+        "rms_error": 0.0016199254218938282,
+        "samples": 13370,
+        "snr_db": 37.706881345776274
+      },
+      "native_fidelity_note": "causal 16-partial reinterpretation at 48 Hz; temporal/level mismatch is intentional, not an exact source replacement",
+      "native_metrics": {
+        "centroid_hz": 793.3917489159494,
+        "crest_db": 10.070766489175876,
+        "energy_above_6khz": 0.03511037475522719,
+        "peak": 0.08202362060546875,
+        "rms": 0.02572767915587527,
+        "zero_crossings_per_second": 1089.6551724137933
+      },
+      "source_id": "zaag.crushed-teeth",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.26263427734375,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 6247,
+        "rendered_samples": 50347
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.9999155416682609,
+            "rms_error": 0.0016199254218938282,
+            "samples": 13370,
+            "snr_db": 37.706881345776274
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.9999155416682609,
+            "rms_error": 0.0016199254218938282,
+            "samples": 13370,
+            "snr_db": 37.706881345776274
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.993511564070224,
+            "rms_error": 0.014467272232074857,
+            "samples": 9812,
+            "snr_db": 18.62413309745837
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9966464430368996,
+            "rms_error": 0.010192720355702234,
+            "samples": 9812,
+            "snr_db": 21.666063987338234
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999131564401176,
+            "rms_error": 0.0016239689227422044,
+            "samples": 8914,
+            "snr_db": 37.60105828617968
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9950660527687109,
+            "rms_error": 0.012214139460086768,
+            "samples": 8914,
+            "snr_db": 20.075355078832068
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999149445382394,
+            "rms_error": 0.001591879906001518,
+            "samples": 6685,
+            "snr_db": 37.679457327179136
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.9837367210215726,
+            "rms_error": 0.02234298724295181,
+            "samples": 6685,
+            "snr_db": 14.73483859128451
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999115822642625,
+            "rms_error": 0.0015518426793768357,
+            "samples": 3343,
+            "snr_db": 37.53481526917725
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9472003876196402,
+            "rms_error": 0.03986099303745037,
+            "samples": 3343,
+            "snr_db": 9.340806828484773
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999118041226648,
+            "rms_error": 0.0014023324457600754,
+            "samples": 1672,
+            "snr_db": 37.534473113887444
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.8732139977641221,
+            "rms_error": 0.0607845361831496,
+            "samples": 1672,
+            "snr_db": 4.795630619129665
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999144202958401,
+            "rms_error": 0.000840253041490172,
+            "samples": 418,
+            "snr_db": 37.703809854347426
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.5061242931714899,
+            "rms_error": 0.10708493246526461,
+            "samples": 418,
+            "snr_db": -4.402555624578736
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999286163246901,
+            "rms_error": 0.0004796644255432101,
+            "samples": 53,
+            "snr_db": 38.38588421384327
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.1618650281299415,
+            "rms_error": 0.1251858480456421,
+            "samples": 53,
+            "snr_db": -9.946470298953653
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9851992130211815,
+            "rms_error": 0.007588416200217719,
+            "samples": 33,
+            "snr_db": 13.520778984783703
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": 0.3262409985641952,
+            "rms_error": 0.11277333991995425,
+            "samples": 33,
+            "snr_db": -9.920327020403906
+          }
+        }
+      ]
+    },
+    {
+      "c_image_metrics": {
+        "centroid_hz": 3017.5150468729494,
+        "crest_db": 6.314569108414473,
+        "energy_above_6khz": 0.10800396380609173,
+        "peak": 0.33306884765625,
+        "rms": 0.16099246834805192,
+        "zero_crossings_per_second": 4513.793103448276
+      },
+      "c_image_reference": {
+        "correlation": 0.9999164471366506,
+        "rms_error": 0.0020723658014460576,
+        "samples": 13370,
+        "snr_db": 37.76889655613882
+      },
+      "native_fidelity_note": "causal 16-partial reinterpretation at 48 Hz; temporal/level mismatch is intentional, not an exact source replacement",
+      "native_metrics": {
+        "centroid_hz": 670.6016249159952,
+        "crest_db": 11.463115190242446,
+        "energy_above_6khz": 0.02063559665289645,
+        "peak": 0.089630126953125,
+        "rms": 0.023949599322446887,
+        "zero_crossings_per_second": 2693.1034482758623
+      },
+      "source_id": "zaag.harmonic-rip",
+      "sustain": {
+        "finite": true,
+        "held_samples": 44100,
+        "max_sample_delta": 0.426544189453125,
+        "note": "release completes an active overlap then continues remaining source tail",
+        "post_release_samples": 7785,
+        "rendered_samples": 51885
+      },
+      "transpositions": [
+        {
+          "antialiased": {
+            "correlation": 0.9999164471366506,
+            "rms_error": 0.0020723658014460576,
+            "samples": 13370,
+            "snr_db": 37.76889655613882
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1,
+          "unfiltered": {
+            "correlation": 0.9999164471366506,
+            "rms_error": 0.0020723658014460576,
+            "samples": 13370,
+            "snr_db": 37.76889655613882
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9927094878646187,
+            "rms_error": 0.019963136780673685,
+            "samples": 9812,
+            "snr_db": 18.032962811847128
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.3626331526072846,
+          "unfiltered": {
+            "correlation": 0.9971918794332479,
+            "rms_error": 0.012147326764371958,
+            "samples": 9812,
+            "snr_db": 22.347924175945472
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.999916528618463,
+            "rms_error": 0.002051273392954868,
+            "samples": 8914,
+            "snr_db": 37.772209838292234
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 1.5,
+          "unfiltered": {
+            "correlation": 0.9951116336614148,
+            "rms_error": 0.015678282471789057,
+            "samples": 8914,
+            "snr_db": 20.106711079769518
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999176905203097,
+            "rms_error": 0.0020137898781147434,
+            "samples": 6685,
+            "snr_db": 37.834631312993636
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 2,
+          "unfiltered": {
+            "correlation": 0.9835215251334862,
+            "rms_error": 0.028964505977536078,
+            "samples": 6685,
+            "snr_db": 14.677591875470497
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999183077171135,
+            "rms_error": 0.0018982465877895442,
+            "samples": 3343,
+            "snr_db": 37.86874121045463
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 4,
+          "unfiltered": {
+            "correlation": 0.9385129453121155,
+            "rms_error": 0.0553740163931589,
+            "samples": 3343,
+            "snr_db": 8.56967326924826
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999173765503546,
+            "rms_error": 0.0016034510577993852,
+            "samples": 1672,
+            "snr_db": 37.80213718283991
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 8,
+          "unfiltered": {
+            "correlation": 0.7806561596423421,
+            "rms_error": 0.09986292521973701,
+            "samples": 1672,
+            "snr_db": 1.9151656841932811
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9999126301644541,
+            "rms_error": 0.0006135312421276703,
+            "samples": 418,
+            "snr_db": 37.58319815652131
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 32,
+          "unfiltered": {
+            "correlation": 0.29075500402621046,
+            "rms_error": 0.1489963109753735,
+            "samples": 418,
+            "snr_db": -10.123578505155951
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9998893229768874,
+            "rms_error": 0.0003761240353431246,
+            "samples": 53,
+            "snr_db": 36.20630114292308
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 256,
+          "unfiltered": {
+            "correlation": 0.3695568255121079,
+            "rms_error": 0.15602810578507428,
+            "samples": 53,
+            "snr_db": -16.151133841006303
+          }
+        },
+        {
+          "antialiased": {
+            "correlation": 0.9760565669306076,
+            "rms_error": 0.004740869224230248,
+            "samples": 33,
+            "snr_db": 13.110552595774227
+          },
+          "note": "against ideal polyphase varispeed, not duration-preserving FFT pitch shift",
+          "ratio": 413.4375,
+          "unfiltered": {
+            "correlation": 0.1063381215962084,
+            "rms_error": 0.14312522576985848,
+            "samples": 33,
+            "snr_db": -16.48661158784097
+          }
+        }
+      ]
+    }
+  ],
+  "version": 1
+}

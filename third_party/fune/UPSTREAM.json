@@ -1,0 +1,27 @@
+{
+  "repository": "https://github.com/hugelton/Fune",
+  "revision": "dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b",
+  "files": {
+    "sdk/kreisel_sdk.h": "060b93fef8da4ee8060baa53469ac1e9322ecd6042b4f50ab2eed7f6d5072f1c",
+    "sdk/LICENSE": "46305fc52a284d41ebe6f9a90e7b825d432561d8f62f9d81315ff7c215d7c74d",
+    "src/kreisel_dsp.h": "eb8f1a6e73bf83d63c02f69123a6fb350e4e75a7862cef2dd5d4635247eab1ef",
+    "src/kreisel_plugin.h": "c430d77dd3505bef04fea67a7b802e96792443e951a6846cf3ba749632bbbab9",
+    "src/kreisel_engine.h": "11d9be1d4ad1b3ab198d703f92c4776dc314916a7a3046729e8a6b0e2b49b338",
+    "src/kreisel_plugin_ui.h": "3485ab3de0f93501bd01920325a0812a0ff325082703f6f9a64eb9d5aae2e180",
+    "src/kreisel_engine_api.h": "dbc0caf63a454879f22c27677631fbdb7c89f692052444f01c6678f3d6ae9397",
+    "src/fe_tables.h": "6abc1fd40d7fed2613176ef86894993d6c28c3e372bf7e0cae84ac3838e5c0e5",
+    "src/kreisel_engine_types.h": "d17c3f765036a502eb78cf4563343299da36ab77d924e64c325e235ecf10a75b",
+    "src/kreisel_voice_dsp.c": "a9d1736a843f5ca8795f6000caa4f8dd4e862054c0b58a8b98410bfdd188f751",
+    "src/kreisel_mul.h": "1d08cfb028af426198e495dea4ecd4666daba7b5d46504ab0958dc6fc2f59aaf",
+    "src/kreisel_plugin_image.h": "3ba6ff5da5a5e30ae01dc474cddc30a9a4e1436160c6b197365a6702a179f4df",
+    "tools/kpl_build.py": "7f3ad48e70b3df995549354cb471ea6700b50e686ed7cb3c0e4fd7e17d58434a",
+    "tools/fm1_mul_scan.py": "d0c85f4d2b5e8f38c3ebd27b50cee2bfcb515fbb9efdc3ce442a0dbf445202f5",
+    "platforms/targets/fm1.toml": "c4003ceba57f8714d7c5a316311949d06b931e7f8f83e42cc58f82ae13e25163",
+    "platforms/fm1hw/fm1_plugin.py": "091e89a7c71a96f2ca9b6f1761d3757bf7e8b6a7ccf21beaa3dc8d5d9a3d0553",
+    "platforms/fm1hw/fm1_con.py": "ae7e8f0fdc4d20ca7fc5cff7fcd5141452754fed23c73dad109e2ae2471ed7fb",
+    "LICENSE": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+    "LICENSING.md": "133aca626f103c1c189ac93de5e618af85de587eb83df32eb6e51ae2bc990e86",
+    "platforms/fm1hw/fm1_slots.py": "c4c9fa6bde47a0253a6c83c9b7be5724425c772d29d7744d263e4850ee00d34d"
+  },
+  "note": "Exact unmodified subset. sdk/ is MIT; src/, tools/, platforms/ are MPL-2.0. Generated tables retain upstream provenance. See LICENSE and sdk/LICENSE."
+}

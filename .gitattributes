@@ -1,0 +1,9 @@
+* text=auto eol=lf
+# These files have upstream byte hashes in third_party/fune/UPSTREAM.json.
+third_party/fune/** -text
+*.wav binary
+*.bmp binary
+*.png binary
+*.zip binary
+*.kpl binary
+*.fune binary

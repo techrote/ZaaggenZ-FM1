@@ -1,0 +1,164 @@
+{
+  "method": "actual-c-source-upper-pitch-band-v1",
+  "qualification": "finite-event C decoder versus independent ideal polyphase varispeed; not pitch accuracy of a steady musical oscillator and not physical hardware qualification",
+  "probe_sha256": "13cb32b097d0f3fe09a86195497797ea1bef9547f95e52237d9f8614fe300164",
+  "bank_sha256": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
+  "current_maximum_decimation": 256,
+  "maximum_valid_core_ratio": 413.4375,
+  "rows": [
+    {
+      "source": "locked_bloom",
+      "ratio": 256,
+      "samples": 51,
+      "actual_rms": 0.03852008454175211,
+      "ideal_rms": 0.038536137076849664,
+      "relative_rms_db": -0.0036189303694555254,
+      "snr_db": 36.248982697686955,
+      "actual_peak": 0.066070556640625,
+      "reference_peak": 0.06657639566440442
+    },
+    {
+      "source": "locked_bloom",
+      "ratio": 413.4375,
+      "samples": 32,
+      "actual_rms": 0.029007266533107333,
+      "ideal_rms": 0.032601985240657216,
+      "relative_rms_db": -1.014744819815595,
+      "snr_db": 14.07107158233967,
+      "actual_peak": 0.05712890625,
+      "reference_peak": 0.05617435487981974
+    },
+    {
+      "source": "zaag.bloom-bark",
+      "ratio": 256,
+      "samples": 53,
+      "actual_rms": 0.057321898096545094,
+      "ideal_rms": 0.05718837363364723,
+      "relative_rms_db": 0.020256336079330695,
+      "snr_db": 38.16558136570006,
+      "actual_peak": 0.10919189453125,
+      "reference_peak": 0.10940540025567745
+    },
+    {
+      "source": "zaag.bloom-bark",
+      "ratio": 413.4375,
+      "samples": 33,
+      "actual_rms": 0.05163478843605566,
+      "ideal_rms": 0.05392528354300626,
+      "relative_rms_db": -0.37700070824813126,
+      "snr_db": 17.939986642464117,
+      "actual_peak": 0.099273681640625,
+      "reference_peak": 0.09473619708411313
+    },
+    {
+      "source": "zaag.formant-snarl",
+      "ratio": 256,
+      "samples": 53,
+      "actual_rms": 0.04778181927108355,
+      "ideal_rms": 0.04800321114862069,
+      "relative_rms_db": -0.04015217891612923,
+      "snr_db": 37.32784695447187,
+      "actual_peak": 0.0831298828125,
+      "reference_peak": 0.08455944921046082
+    },
+    {
+      "source": "zaag.formant-snarl",
+      "ratio": 413.4375,
+      "samples": 33,
+      "actual_rms": 0.03923567114889646,
+      "ideal_rms": 0.04306712576324759,
+      "relative_rms_db": -0.8092960537184486,
+      "snr_db": 14.605445613753528,
+      "actual_peak": 0.070465087890625,
+      "reference_peak": 0.07803591286355738
+    },
+    {
+      "source": "zaag.upper-chop",
+      "ratio": 256,
+      "samples": 53,
+      "actual_rms": 0.048127090424883036,
+      "ideal_rms": 0.04825513118822809,
+      "relative_rms_db": -0.023077878372716604,
+      "snr_db": 37.207999318972334,
+      "actual_peak": 0.091064453125,
+      "reference_peak": 0.09267462863322212
+    },
+    {
+      "source": "zaag.upper-chop",
+      "ratio": 413.4375,
+      "samples": 33,
+      "actual_rms": 0.037888939616513524,
+      "ideal_rms": 0.042587917867343617,
+      "relative_rms_db": -1.0154791366249742,
+      "snr_db": 13.397062974996327,
+      "actual_peak": 0.070465087890625,
+      "reference_peak": 0.07682905228293285
+    },
+    {
+      "source": "zaag.split-maul",
+      "ratio": 256,
+      "samples": 53,
+      "actual_rms": 0.10356294795226763,
+      "ideal_rms": 0.10368281131423618,
+      "relative_rms_db": -0.010047202446771125,
+      "snr_db": 37.89872291823484,
+      "actual_peak": 0.22357177734375,
+      "reference_peak": 0.22724792371524594
+    },
+    {
+      "source": "zaag.split-maul",
+      "ratio": 413.4375,
+      "samples": 33,
+      "actual_rms": 0.08138418962392323,
+      "ideal_rms": 0.0931779003366274,
+      "relative_rms_db": -1.175457529497013,
+      "snr_db": 11.78854592005106,
+      "actual_peak": 0.17645263671875,
+      "reference_peak": 0.20626425698076356
+    },
+    {
+      "source": "zaag.crushed-teeth",
+      "ratio": 256,
+      "samples": 53,
+      "actual_rms": 0.03990552928136103,
+      "ideal_rms": 0.03983196400160936,
+      "relative_rms_db": 0.016027092302591292,
+      "snr_db": 38.38588421384327,
+      "actual_peak": 0.07940673828125,
+      "reference_peak": 0.07762399218575214
+    },
+    {
+      "source": "zaag.crushed-teeth",
+      "ratio": 413.4375,
+      "samples": 33,
+      "actual_rms": 0.031011227338979284,
+      "ideal_rms": 0.03599068327917749,
+      "relative_rms_db": -1.2934227401443963,
+      "snr_db": 13.520778984783703,
+      "actual_peak": 0.07598876953125,
+      "reference_peak": 0.08952151714522893
+    },
+    {
+      "source": "zaag.harmonic-rip",
+      "ratio": 256,
+      "samples": 53,
+      "actual_rms": 0.02420524580843546,
+      "ideal_rms": 0.024302230966372337,
+      "relative_rms_db": -0.03473293425658276,
+      "snr_db": 36.20630114292308,
+      "actual_peak": 0.043304443359375,
+      "reference_peak": 0.04419564268677172
+    },
+    {
+      "source": "zaag.harmonic-rip",
+      "ratio": 413.4375,
+      "samples": 33,
+      "actual_rms": 0.020049072652872667,
+      "ideal_rms": 0.02144794095368692,
+      "relative_rms_db": -0.5858263147854027,
+      "snr_db": 13.110552595774227,
+      "actual_peak": 0.043304443359375,
+      "reference_peak": 0.03204897370738574
+    }
+  ]
+}

@@ -1,0 +1,562 @@
+{
+  "baseline": {
+    "format": "zg-source-bank",
+    "generated_sha256": "749cff9c8ab676a10ca84777557ec8bcfc02eb16d904eac694f657e871f1f3f5",
+    "pcm_flash_bytes": 185518,
+    "sources": [
+      {
+        "root_metrics": {
+          "correlation": 0.9996534824237275,
+          "peak_absolute_error": 0.2612452616468265,
+          "rms_reconstructed": 0.3474228034929754,
+          "rms_reference": 0.3477589460485302,
+          "snr_db": 31.590840006812492
+        },
+        "source_id": "locked_bloom"
+      },
+      {
+        "root_metrics": {
+          "correlation": 0.9826417920318554,
+          "peak_absolute_error": 1.9886513828015704,
+          "rms_reconstructed": 1.4881171393313468,
+          "rms_reference": 1.554926441095029,
+          "snr_db": 14.723156208814208
+        },
+        "source_id": "zaag.bloom-bark"
+      },
+      {
+        "root_metrics": {
+          "correlation": 0.9830369748767092,
+          "peak_absolute_error": 1.4420036043749336,
+          "rms_reconstructed": 1.1020707167394994,
+          "rms_reference": 1.1564582343050223,
+          "snr_db": 14.669499149736989
+        },
+        "source_id": "zaag.formant-snarl"
+      },
+      {
+        "root_metrics": {
+          "correlation": 0.9876597365283751,
+          "peak_absolute_error": 1.3960806814758624,
+          "rms_reconstructed": 0.9123489090179386,
+          "rms_reference": 0.9429583105349121,
+          "snr_db": 16.036649427909712
+        },
+        "source_id": "zaag.upper-chop"
+      },
+      {
+        "root_metrics": {
+          "correlation": 0.9975650632516979,
+          "peak_absolute_error": 1.456144361828224,
+          "rms_reconstructed": 1.3329910046468976,
+          "rms_reference": 1.343788734720177,
+          "snr_db": 23.117333925770026
+        },
+        "source_id": "zaag.split-maul"
+      },
+      {
+        "root_metrics": {
+          "correlation": 0.9755177515052118,
+          "peak_absolute_error": 0.846630610420716,
+          "rms_reconstructed": 0.9443512975489897,
+          "rms_reference": 0.9952428706715873,
+          "snr_db": 13.101013205055374
+        },
+        "source_id": "zaag.crushed-teeth"
+      },
+      {
+        "root_metrics": {
+          "correlation": 0.9737782578675408,
+          "peak_absolute_error": 2.0809719645888163,
+          "rms_reconstructed": 1.2053544083887644,
+          "rms_reference": 1.282334219374748,
+          "snr_db": 12.766498204767792
+        },
+        "source_id": "zaag.harmonic-rip"
+      }
+    ],
+    "version": 1
+  },
+  "candidate_actual_c": {
+    "codec": "mu255/common amplitude range8/256-entryQ15 lookup",
+    "pcm_and_lut_bytes": 248361,
+    "sources": [
+      {
+        "id": "locked_bloom",
+        "ratios": [
+          {
+            "correlation": 0.9999096800791621,
+            "peak_absolute_error": 0.002590137743272533,
+            "ratio": 1,
+            "rms_reconstructed": 0.04349096464806773,
+            "rms_reference": 0.043469868256066274,
+            "snr_db": 37.42382580220672
+          },
+          {
+            "correlation": 0.9998067836708653,
+            "peak_absolute_error": 0.02210024939710134,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.043453053869509074,
+            "rms_reference": 0.043469961356126394,
+            "snr_db": 34.129180615608384
+          },
+          {
+            "correlation": 0.99990968558358,
+            "peak_absolute_error": 0.0026273615845354564,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.04348664122298839,
+            "rms_reference": 0.04346717684289239,
+            "snr_db": 37.425036539521976
+          },
+          {
+            "correlation": 0.9999106305695811,
+            "peak_absolute_error": 0.0025899903549333886,
+            "ratio": 2,
+            "rms_reconstructed": 0.04348065354525826,
+            "rms_reference": 0.04346021085087061,
+            "snr_db": 37.47040323666509
+          },
+          {
+            "correlation": 0.9999071816500578,
+            "peak_absolute_error": 0.0025903415160126453,
+            "ratio": 4,
+            "rms_reconstructed": 0.04343274548559163,
+            "rms_reference": 0.043419738852622555,
+            "snr_db": 37.30871707372952
+          },
+          {
+            "correlation": 0.9999030065762262,
+            "peak_absolute_error": 0.002505456910509199,
+            "ratio": 8,
+            "rms_reconstructed": 0.043359589557029274,
+            "rms_reference": 0.04333623746985284,
+            "snr_db": 37.108055281943386
+          },
+          {
+            "correlation": 0.9999056077163243,
+            "peak_absolute_error": 0.001764427476872804,
+            "ratio": 32,
+            "rms_reconstructed": 0.042852312968431505,
+            "rms_reference": 0.04294883360223514,
+            "snr_db": 37.10985806586954
+          }
+        ]
+      },
+      {
+        "id": "zaag.bloom-bark",
+        "ratios": [
+          {
+            "correlation": 0.9999136309441287,
+            "peak_absolute_error": 0.009017226747273621,
+            "ratio": 1,
+            "rms_reconstructed": 0.19433251838621826,
+            "rms_reference": 0.19436580513687862,
+            "snr_db": 37.81124452641078
+          },
+          {
+            "correlation": 0.9949554933054934,
+            "peak_absolute_error": 0.13748060689710762,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.18758920306146462,
+            "rms_reference": 0.19356616882747973,
+            "snr_db": 19.85111039847282
+          },
+          {
+            "correlation": 0.9999142887151089,
+            "peak_absolute_error": 0.008578999145192168,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.1931868205918388,
+            "rms_reference": 0.19320214236614605,
+            "snr_db": 37.846342972838954
+          },
+          {
+            "correlation": 0.9999143307159764,
+            "peak_absolute_error": 0.00867037774795093,
+            "ratio": 2,
+            "rms_reconstructed": 0.191883405410638,
+            "rms_reference": 0.19180411376183762,
+            "snr_db": 37.84539202738933
+          },
+          {
+            "correlation": 0.9999137030002463,
+            "peak_absolute_error": 0.009164256656882863,
+            "ratio": 4,
+            "rms_reconstructed": 0.18573924163186417,
+            "rms_reference": 0.18592309756125078,
+            "snr_db": 37.81028821311046
+          },
+          {
+            "correlation": 0.9999152501991728,
+            "peak_absolute_error": 0.008523496118635954,
+            "ratio": 8,
+            "rms_reconstructed": 0.16700207018935923,
+            "rms_reference": 0.16706972765996145,
+            "snr_db": 37.953610498166995
+          },
+          {
+            "correlation": 0.9998896765149932,
+            "peak_absolute_error": 0.0033974439029503534,
+            "ratio": 32,
+            "rms_reconstructed": 0.07023082710998986,
+            "rms_reference": 0.07018971985963894,
+            "snr_db": 38.22265505749502
+          }
+        ]
+      },
+      {
+        "id": "zaag.formant-snarl",
+        "ratios": [
+          {
+            "correlation": 0.9999133217856748,
+            "peak_absolute_error": 0.005716014375957035,
+            "ratio": 1,
+            "rms_reconstructed": 0.1445972381857091,
+            "rms_reference": 0.14455727928812778,
+            "snr_db": 37.66538595795962
+          },
+          {
+            "correlation": 0.9952465159599471,
+            "peak_absolute_error": 0.09064801888545276,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.1390941688313861,
+            "rms_reference": 0.14402522841160514,
+            "snr_db": 19.894739991291765
+          },
+          {
+            "correlation": 0.9999164085377562,
+            "peak_absolute_error": 0.005797020355031823,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.14380412770074094,
+            "rms_reference": 0.14379284518118135,
+            "snr_db": 37.82602492536513
+          },
+          {
+            "correlation": 0.9999135127645843,
+            "peak_absolute_error": 0.006419788114568115,
+            "ratio": 2,
+            "rms_reconstructed": 0.14283799866385238,
+            "rms_reference": 0.14277453073757312,
+            "snr_db": 37.67262194859783
+          },
+          {
+            "correlation": 0.9999136885542317,
+            "peak_absolute_error": 0.006093447786093886,
+            "ratio": 4,
+            "rms_reconstructed": 0.13735640337825356,
+            "rms_reference": 0.1373260334863716,
+            "snr_db": 37.6879477229946
+          },
+          {
+            "correlation": 0.9999120325085803,
+            "peak_absolute_error": 0.005072040144318113,
+            "ratio": 8,
+            "rms_reconstructed": 0.11268300169260201,
+            "rms_reference": 0.11262188441737454,
+            "snr_db": 37.6293649688928
+          },
+          {
+            "correlation": 0.9999010433440625,
+            "peak_absolute_error": 0.0026165295168319863,
+            "ratio": 32,
+            "rms_reconstructed": 0.06452738702587911,
+            "rms_reference": 0.06452783564393282,
+            "snr_db": 37.32340392727788
+          }
+        ]
+      },
+      {
+        "id": "zaag.upper-chop",
+        "ratios": [
+          {
+            "correlation": 0.999916114395268,
+            "peak_absolute_error": 0.005577832443246972,
+            "ratio": 1,
+            "rms_reconstructed": 0.11785352306361356,
+            "rms_reference": 0.11786978881686401,
+            "snr_db": 37.75758688275399
+          },
+          {
+            "correlation": 0.996203761541195,
+            "peak_absolute_error": 0.09366327233791549,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.11476576122938074,
+            "rms_reference": 0.11746658390388015,
+            "snr_db": 21.002434463052605
+          },
+          {
+            "correlation": 0.9999162551146997,
+            "peak_absolute_error": 0.005832573955849352,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.11728868236151861,
+            "rms_reference": 0.11729192859966235,
+            "snr_db": 37.76472095615145
+          },
+          {
+            "correlation": 0.9999164296977313,
+            "peak_absolute_error": 0.005976578907268881,
+            "ratio": 2,
+            "rms_reconstructed": 0.11674649407807947,
+            "rms_reference": 0.11668783654766023,
+            "snr_db": 37.76373450277684
+          },
+          {
+            "correlation": 0.9999128262871172,
+            "peak_absolute_error": 0.005707432807272983,
+            "ratio": 4,
+            "rms_reconstructed": 0.11416296774626492,
+            "rms_reference": 0.11406367615134028,
+            "snr_db": 37.56752713285529
+          },
+          {
+            "correlation": 0.999911487719705,
+            "peak_absolute_error": 0.006057532043153624,
+            "ratio": 8,
+            "rms_reconstructed": 0.10565391635092343,
+            "rms_reference": 0.10561902121540648,
+            "snr_db": 37.520559021188404
+          },
+          {
+            "correlation": 0.9999161725083282,
+            "peak_absolute_error": 0.0023755206261164147,
+            "ratio": 32,
+            "rms_reconstructed": 0.06659528972621559,
+            "rms_reference": 0.06648274797324179,
+            "snr_db": 37.65709990585877
+          }
+        ]
+      },
+      {
+        "id": "zaag.split-maul",
+        "ratios": [
+          {
+            "correlation": 0.9999177545557297,
+            "peak_absolute_error": 0.00685437103555836,
+            "ratio": 1,
+            "rms_reconstructed": 0.16798383483346543,
+            "rms_reference": 0.1679735918400221,
+            "snr_db": 37.85362236178449
+          },
+          {
+            "correlation": 0.9992550528539641,
+            "peak_absolute_error": 0.09112505212962174,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.16693290665273433,
+            "rms_reference": 0.16789264112530705,
+            "snr_db": 28.21354010097376
+          },
+          {
+            "correlation": 0.9999162545050763,
+            "peak_absolute_error": 0.007263290352523488,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.16785486389881576,
+            "rms_reference": 0.16784572291395614,
+            "snr_db": 37.77431980071579
+          },
+          {
+            "correlation": 0.9999162394200152,
+            "peak_absolute_error": 0.0072470591354764635,
+            "ratio": 2,
+            "rms_reconstructed": 0.1677039423238992,
+            "rms_reference": 0.16768467917824384,
+            "snr_db": 37.773454739666924
+          },
+          {
+            "correlation": 0.9999153613232601,
+            "peak_absolute_error": 0.006941063168318162,
+            "ratio": 4,
+            "rms_reconstructed": 0.16687633983113345,
+            "rms_reference": 0.16684447695361498,
+            "snr_db": 37.726488135662784
+          },
+          {
+            "correlation": 0.999918248489227,
+            "peak_absolute_error": 0.006198784024416926,
+            "ratio": 8,
+            "rms_reconstructed": 0.16345811362793417,
+            "rms_reference": 0.1633386172660527,
+            "snr_db": 37.85615634263417
+          },
+          {
+            "correlation": 0.9999191722495812,
+            "peak_absolute_error": 0.0059377669595452875,
+            "ratio": 32,
+            "rms_reconstructed": 0.14499931802370547,
+            "rms_reference": 0.14497886520581918,
+            "snr_db": 37.92746306328238
+          }
+        ]
+      },
+      {
+        "id": "zaag.crushed-teeth",
+        "ratios": [
+          {
+            "correlation": 0.9999155416682609,
+            "peak_absolute_error": 0.0037975241201742005,
+            "ratio": 1,
+            "rms_reconstructed": 0.12429953029087144,
+            "rms_reference": 0.12440535883394842,
+            "snr_db": 37.706881345776274
+          },
+          {
+            "correlation": 0.993511564070224,
+            "peak_absolute_error": 0.06743677975881532,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.11913845169292621,
+            "rms_reference": 0.12347905825811448,
+            "snr_db": 18.62413309745837
+          },
+          {
+            "correlation": 0.9999131564401176,
+            "peak_absolute_error": 0.004188846070408397,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.12313626904334181,
+            "rms_reference": 0.12320565115866351,
+            "snr_db": 37.60105828617968
+          },
+          {
+            "correlation": 0.9999149445382394,
+            "peak_absolute_error": 0.003738482189153791,
+            "ratio": 2,
+            "rms_reconstructed": 0.12177217005587476,
+            "rms_reference": 0.12186617133080571,
+            "snr_db": 37.679457327179136
+          },
+          {
+            "correlation": 0.9999115822642625,
+            "peak_absolute_error": 0.00419049244778727,
+            "ratio": 4,
+            "rms_reconstructed": 0.11680867897305029,
+            "rms_reference": 0.11683916787751546,
+            "snr_db": 37.53481526917725
+          },
+          {
+            "correlation": 0.9999118041226648,
+            "peak_absolute_error": 0.0040848447763138784,
+            "ratio": 8,
+            "rms_reconstructed": 0.105651609652417,
+            "rms_reference": 0.10557829351260914,
+            "snr_db": 37.534473113887444
+          },
+          {
+            "correlation": 0.9999144202958401,
+            "peak_absolute_error": 0.00295699537532898,
+            "ratio": 32,
+            "rms_reconstructed": 0.06450977357063258,
+            "rms_reference": 0.06450607035123848,
+            "snr_db": 37.703809854347426
+          }
+        ]
+      },
+      {
+        "id": "zaag.harmonic-rip",
+        "ratios": [
+          {
+            "correlation": 0.9999164471366506,
+            "peak_absolute_error": 0.006179708557110863,
+            "ratio": 1,
+            "rms_reconstructed": 0.16032729797999465,
+            "rms_reference": 0.1602917774218435,
+            "snr_db": 37.76889655613882
+          },
+          {
+            "correlation": 0.9927094878646187,
+            "peak_absolute_error": 0.14070129202124387,
+            "ratio": 1.3626331526072846,
+            "rms_reconstructed": 0.15249213725223237,
+            "rms_reference": 0.15917575666038578,
+            "snr_db": 18.032962811847128
+          },
+          {
+            "correlation": 0.999916528618463,
+            "peak_absolute_error": 0.006776322708636484,
+            "ratio": 1.5,
+            "rms_reconstructed": 0.15876457767803595,
+            "rms_reference": 0.15872087125123086,
+            "snr_db": 37.772209838292234
+          },
+          {
+            "correlation": 0.9999176905203097,
+            "peak_absolute_error": 0.006207568911034633,
+            "ratio": 2,
+            "rms_reconstructed": 0.15697271099980326,
+            "rms_reference": 0.1569443621352957,
+            "snr_db": 37.834631312993636
+          },
+          {
+            "correlation": 0.9999183077171135,
+            "peak_absolute_error": 0.006010764040621952,
+            "ratio": 4,
+            "rms_reconstructed": 0.14852644816569993,
+            "rms_reference": 0.14852162367807153,
+            "snr_db": 37.86874121045463
+          },
+          {
+            "correlation": 0.9999173765503546,
+            "peak_absolute_error": 0.0053411224422919845,
+            "ratio": 8,
+            "rms_reconstructed": 0.12438753513429421,
+            "rms_reference": 0.12449805528763734,
+            "snr_db": 37.80213718283991
+          },
+          {
+            "correlation": 0.9999126301644541,
+            "peak_absolute_error": 0.002736320245363605,
+            "ratio": 32,
+            "rms_reconstructed": 0.046444014705321016,
+            "rms_reference": 0.04645116285027581,
+            "snr_db": 37.58319815652131
+          }
+        ]
+      }
+    ]
+  },
+  "decision": "44.1kHz mu-law8 plus 29.4kHz intermediate mip",
+  "target_candidate": {
+    "api": "1.4",
+    "artifact": "zaaggenz.kpl",
+    "artifact_sha256": "5dc8f85f6dba04816caebcd539fe1e3cd36a6b07c20316513b0738f34412aba5",
+    "bss_bytes": 1792,
+    "checks": [
+      "upstream_hashes",
+      "four_link_relocation_agreement",
+      "image_crc",
+      "header_crc",
+      "no_float_helpers",
+      "pi32v2_multiply_erratum_scan",
+      "flash_region_limit",
+      "actual_image_ram_limit",
+      "actual_sample_path_divide_free"
+    ],
+    "data_bytes": 0,
+    "file_bytes": 272636,
+    "flash_allocated_bytes": 274432,
+    "flash_sectors": 67,
+    "fune_revision": "dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b",
+    "image_bytes": 270956,
+    "not_measured": [
+      "physical_audio",
+      "worst_case_block_time",
+      "hardware_stack_high_water",
+      "flash_xip_runtime_cost"
+    ],
+    "ram_bytes": 1792,
+    "ram_pool_bytes": 2048,
+    "relocations": 420,
+    "sample_path_divide_instructions": {
+      "bandpass": 0,
+      "block_largest_loop": 0,
+      "read_pcm": 0,
+      "read_source": 0,
+      "saturate": 0,
+      "scale": 0,
+      "zg_character_sample": 0,
+      "zg_native_sample": 0,
+      "zg_source_sample": 0,
+      "zg_tanh_q15": 0
+    },
+    "status": "target_compiled_not_hardware_qualified",
+    "toolchain_archive_sha256": "a1545cddbc451a06bac43eb5cd96d831470c42a97c5c0b1f98879a20fc7647bd",
+    "toolchain_clang_sha256": "c45189ee624de0430deb0db02e6dce171fb5538e7fe323e3964dc8ac6236240f",
+    "toolchain_version": "20260730.1"
+  }
+}
