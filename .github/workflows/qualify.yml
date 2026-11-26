@@ -1,0 +1,131 @@
+name: Native instrument qualification
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: native-instrument-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-reference.txt
+      - name: Build and native regression
+        run: |
+          cmake -S . -B build/host -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/host --parallel 4
+          ctest --test-dir build/host --output-on-failure
+          python tools/generate_presets.py --check
+          python -m unittest discover -s tests -p test_source_compiler.py -v
+      - name: Acoustic and tuning qualification
+        run: |
+          python tests/dsp/test_acoustics.py --probe build/host/dsp-probe --out build/acoustics.json
+          python tests/dsp/test_pitch.py --probe build/host/pitch-probe --out build/pitch.json
+          python tests/test_auditions.py --renderer build/host/zaag-render --out build/presets.json --audio-dir build/auditions
+      - name: Authenticate reference and compare real C audio
+        run: |
+          git clone https://github.com/techrote/zaaggenz.git .upstream/zaaggenz
+          git -C .upstream/zaaggenz checkout --detach d7e580c190d00e1d00a573a6b845c75ddddc1d4c
+          python -m unittest discover -s tests -p test_reference_import.py -v
+          python tools/compare_architectures.py --reference .upstream/zaaggenz --source-probe build/host/source-probe --native-probe build/host/dsp-probe --out build/comparison
+      - name: Address and undefined-behavior sanitizers
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          cmake -S . -B build/sanitize -DCMAKE_BUILD_TYPE=Debug -DZG_SANITIZE=ON
+          cmake --build build/sanitize --parallel 4
+          ctest --test-dir build/sanitize --output-on-failure
+      - name: Package portable renderer and actual audio
+        run: python tools/package_delivery.py --build build/host --kind linux --audio build/auditions --comparison build/comparison
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZaaggenZ-Linux-and-comparative-audio
+          path: |
+            dist/*.zip
+            build/acoustics.json
+            build/pitch.json
+            build/presets.json
+          if-no-files-found: error
+          retention-days: 90
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-reference.txt
+      - name: Native Windows build and regression
+        run: |
+          cmake -S . -B build/host -A x64
+          cmake --build build/host --config Release --parallel 4
+          ctest --test-dir build/host -C Release --output-on-failure
+      - name: Windows acoustic and tuning evidence
+        run: |
+          python tests/dsp/test_acoustics.py --probe build/host/Release/dsp-probe.exe --out build/acoustics-windows.json
+          python tests/dsp/test_pitch.py --probe build/host/Release/pitch-probe.exe --out build/pitch-windows.json
+          python tests/test_auditions.py --renderer build/host/Release/zaag-render.exe --out build/presets-windows.json --audio-dir build/auditions
+      - name: Native window, controls and WAV export smoke
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath build/host/Release/ZaaggenZ-Audition.exe -ArgumentList '--smoke' -PassThru
+          if (-not $process.WaitForExit(15000)) { $process.Kill(); throw 'Windows UI smoke timed out' }
+          if ($process.ExitCode -ne 0) { throw 'Windows UI smoke failed' }
+          $report = Get-Content windows-smoke.json | ConvertFrom-Json
+          if (-not $report.native_window_created -or -not $report.core_rendered -or -not $report.wav_exported) { throw 'Incomplete native UI evidence' }
+      - name: Package portable Windows evaluator
+        run: python tools/package_delivery.py --build build/host --kind windows --audio build/auditions
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZaaggenZ-Windows-Audition
+          path: |
+            dist/*.zip
+            windows-smoke.json
+            windows-audition.bmp
+            build/acoustics-windows.json
+            build/pitch-windows.json
+            build/presets-windows.json
+          if-no-files-found: error
+          retention-days: 90
+  fm1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Actual pinned Fune host
+        run: |
+          python tools/test_fune_host.py
+          python tools/export_fune_presets.py
+      - name: Real pi32v2 target and resource gates
+        run: |
+          python tools/get_fune_toolchain.py
+          python tools/build_fune.py
+          python tools/install_fune.py check build/fm1/zaaggenz.kpl
+      - name: Package installable plugin and native Fune presets
+        run: python tools/package_delivery.py --build build/fm1 --kind fm1 --presets build/fune-presets
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZaaggenZ-FM1-plugin-and-presets
+          path: |
+            dist/*.zip
+            build/fm1/*.json
+          if-no-files-found: error
+          retention-days: 90
