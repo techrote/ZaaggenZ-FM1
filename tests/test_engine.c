@@ -48,7 +48,8 @@ static void layer_ownership(void)
     }
     /* Raw source mute occurs before the shared nonlinear character graph. */
     b=a;b.mute_mask=3;zg_engine_render_stems(&b,y,sy,32);
-    CHECK(b.native.phase!=a.native.phase); /* muted role still advances */
+    if(b.patch.mode==ZG_NATIVE)CHECK(b.native.phase!=a.native.phase);
+    else CHECK(b.source.position_q16!=a.source.position_q16); /* active muted source still advances */
     /* Pedal SUB remains fixed while source note moves. */
     zg_engine_init(&a,44100);a.patch.sub_mode=1;zg_engine_note_on(&a,36,100,0);uint32_t sub=a.sub_pitch;
     zg_engine_note_on(&a,48,100,1);CHECK(a.sub_pitch==sub);

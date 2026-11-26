@@ -31,8 +31,6 @@ def main():
         if not (args.build/'zaaggenz.kpl').exists(): raise SystemExit('Missing compiled FM-1 plugin')
         for f in args.build.glob('zaaggenz*'):
             if f.is_file(): shutil.copy2(f,dest/f.name)
-        for n in ['install_fune.py','fune_slots.py']:
-            shutil.copy2(ROOT/'tools'/n,dest/n)
         # Installer dependencies remain at their original relative locations.
         shutil.copytree(ROOT/'third_party/fune/platforms',dest/'third_party/fune/platforms')
         shutil.copytree(ROOT/'third_party/fune/tools',dest/'third_party/fune/tools')
