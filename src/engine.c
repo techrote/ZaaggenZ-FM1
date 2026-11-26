@@ -12,7 +12,19 @@
 #define ZG_NOINLINE
 #endif
 static ZG_NOINLINE uint32_t wide_ratio(uint32_t x, uint32_t y, uint32_t z)
-{ return z ? (uint32_t)(((uint64_t)x * y) / z) : 0; }
+{
+    if(!z)return 0;
+    if(x==z)return y;
+    if(y==z)return x;
+    uint64_t product=(uint64_t)x*y;
+    /* The fixed-point control ratios have exact power-of-two denominators.
+     * Keep these shifts explicit: the target compiler otherwise emits its
+     * software 64-bit divider even for a constant denominator at the caller. */
+    uint64_t quotient=z==65536u?product>>16:z==1048576u?product>>20:product/z;
+    /* Saturate before narrowing. High notes at 8/12 kHz must reach the pitch
+     * ceiling, never wrap back into the bass register. */
+    return quotient>UINT32_MAX?UINT32_MAX:(uint32_t)quotient;
+}
 static int32_t clamp32(int32_t x, int32_t lo, int32_t hi)
 { return x < lo ? lo : x > hi ? hi : x; }
 static uint8_t cap127(uint8_t x) { return x > 127 ? 127 : x; }
@@ -47,11 +59,25 @@ uint32_t zg_pitch_increment(int key, unsigned tuning, uint32_t sample_rate)
     if (sample_rate>48000) sample_rate=48000;
     if (tuning>=ZG_TUNING_COUNT) tuning=0;
     key=clamp32(key,0,127);
-    uint32_t inc=wide_ratio(PITCH_TABLE[tuning][key],44100,sample_rate);
+    uint32_t inc=PITCH_TABLE[tuning][key];
+    if(sample_rate!=44100u)inc=wide_ratio(inc,44100,sample_rate);
     return inc>0x73333333u ? 0x73333333u : inc;
 }
 static uint32_t pitch_for(const zg_engine *e, int key)
 { return zg_pitch_increment(key,e->patch.tuning,e->rate); }
+static uint32_t expressive_pitch(const zg_engine *e,int key)
+{
+    uint32_t base=pitch_for(e,key);
+    if(!e->bend_cents)return base;
+    uint32_t value=wide_ratio(base,BEND_RATIO_Q20[clamp32(e->bend_cents,-200,200)+200],1048576);
+    return value>0x73333333u?0x73333333u:value;
+}
+void zg_engine_pitch_bend(zg_engine *e,int cents)
+{
+    if(!e)return;
+    e->bend_cents=(int16_t)clamp32(cents,-200,200);
+    e->target_pitch=expressive_pitch(e,e->note);
+}
 static void sanitize(zg_patch *p)
 {
     unsigned i;
@@ -83,7 +109,7 @@ void zg_engine_set_patch(zg_engine *e, const zg_patch *patch)
         zg_source_reset(&e->exciter_source,e->patch.source);
     }
     if(family!=e->patch.family) zg_character_trigger(&e->character);
-    e->target_pitch=pitch_for(e,e->note);
+    e->target_pitch=expressive_pitch(e,e->note);
     e->bypass_character=e->patch.bypass;
     if(structural)e->fade=0;
 }
@@ -137,10 +163,13 @@ void zg_engine_note_on(zg_engine *e,unsigned note,unsigned velocity,int legato)
     if(!velocity) { zg_engine_note_off(e,note);return; }
     int was_active=zg_engine_active(e);
     e->note=(uint8_t)note; e->velocity=(uint8_t)velocity;
-    e->target_pitch=pitch_for(e,(int)note);
+    e->target_pitch=expressive_pitch(e,(int)note);
     if(!was_active || !e->patch.glide) e->pitch=e->target_pitch;
+    /* Every articulated note renews the short independent exciter. Legato
+     * leaves the long melodic SYNTHLINE and its phase/cursor intact. */
+    excite(e);
     if(!legato || !e->gate || e->source.ended) {
-        e->stage=1; excite(e); e->rhythm_phase=0;
+        e->stage=1; e->rhythm_phase=0;
         zg_native_trigger(&e->native,1);
         zg_character_trigger(&e->character);
         zg_source_reset(&e->source,e->patch.source);
@@ -167,8 +196,11 @@ static void block(zg_engine *e,int16_t *out,int32_t *stems,unsigned n,
     unsigned i,l;
     /* Envelopes retain eight fractional bits so long releases do not round
      * to the one-Q15-unit-per-sample floor (~743 ms at44.1k). */
-    int32_t atk=(int32_t)min1((uint32_t)(((uint64_t)32767000u<<8)/(zg_time_ms(e->patch.attack)*e->rate)));
-    int32_t dec=(int32_t)min1((uint32_t)(((uint64_t)32767000u<<8)/(zg_time_ms(e->patch.decay)*e->rate)));
+    int32_t atk=0,dec=0;
+    if(!external) {
+        atk=(int32_t)min1((uint32_t)(((uint64_t)32767000u<<8)/(zg_time_ms(e->patch.attack)*e->rate)));
+        dec=(int32_t)min1((uint32_t)(((uint64_t)32767000u<<8)/(zg_time_ms(e->patch.decay)*e->rate)));
+    }
     int32_t rel=(int32_t)min1((uint32_t)(((uint64_t)32767000u<<8)/(zg_time_ms(e->patch.release)*e->rate)));
     int32_t layer_rel=(rel+1)/2;
     uint32_t beat_inc=(uint32_t)(((uint64_t)e->patch.bpm<<32)/(60u*e->rate));

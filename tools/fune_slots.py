@@ -9,8 +9,10 @@
 from pathlib import Path
 import runpy
 import sys
+from fune_transport import configure_pinned_console
 
 SCRIPT = Path(__file__).resolve().parents[1] / "third_party/fune/platforms/fm1hw/fm1_slots.py"
 if __name__ == "__main__":
+    configure_pinned_console()
     sys.argv[0] = str(SCRIPT)
     runpy.run_path(str(SCRIPT), run_name="__main__")

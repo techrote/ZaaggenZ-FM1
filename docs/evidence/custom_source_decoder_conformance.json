@@ -1,0 +1,19 @@
+{
+  "decoder_bytes": [
+    {
+      "bytes": 25648,
+      "sha256": "a06c11646f1b4f13ef09868301ea75eedbd3069ccd4a3b74d8cb74657328d1a4",
+      "source_id": "compiled.ba2dc2f7f896"
+    }
+  ],
+  "format_version": 2,
+  "generated_sha256": "47e2cd32c4f066ca20af348f18d31d84cd238854f1e099bb99b7845e6593bf11",
+  "midi_keys_checked": 128,
+  "non_octave_edge_steps_checked": [
+    3092,
+    8191,
+    27095040
+  ],
+  "qualification": "host C decode; not hardware timing or listening qualification",
+  "status": "PASS"
+}

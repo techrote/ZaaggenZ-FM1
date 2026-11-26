@@ -71,7 +71,12 @@ static void zg_fune_parameters(zg_fune_track *state, const track_t *track)
     unsigned k;
     const unsigned selected = (unsigned)zg_fune_bound(p[F_PRESET], 0, (int)zg_preset_count - 1);
     zg_patch patch = zg_presets[selected].patch;
-    if (p[F_CHAR] > 0) patch.family = (uint8_t)zg_fune_bound(p[F_CHAR] - 1, 0, ZG_FAMILY_COUNT - 1);
+    if (p[F_CHAR] > 0) {
+        patch.family = (uint8_t)zg_fune_bound(p[F_CHAR] - 1, 0, ZG_FAMILY_COUNT - 1);
+        /* Pure source-image recipes bypass the live character by default.
+         * An explicit CHARACTER choice must turn that stage back on. */
+        patch.bypass = 0;
+    }
     patch.grit = (uint8_t)zg_fune_bound(patch.grit + p[F_GRIT], 0, 127);
     patch.motion = (uint8_t)zg_fune_bound(patch.motion + p[F_MOTION], 0, 127);
     patch.vowel = (uint8_t)zg_fune_bound(patch.vowel + p[F_VOWEL], 0, 127);
@@ -183,10 +188,19 @@ static void zg_fune_render(track_t *track, voice_t *v, int32_t *out,
 
 static const char *const ZG_FAMILIES[] = {"Preset", "Bloom Bark", "Formant Snarl", "Upper Chop", "Split Maul", "Crushed Teeth", "Harmonic Rip", 0};
 static const char *const ZG_MODES[] = {"Preset", "Native", "Source Image", "Hybrid", 0};
+#ifdef ZG_FUNE_CUSTOM_SOURCE_BANK
+#ifndef ZG_COMPILED_SOURCE_COUNT
+#error "Regenerate the custom source bank with the current compiler metadata"
+#endif
+#define ZG_FUNE_IMAGE_MAX ZG_COMPILED_SOURCE_COUNT
+static const char *const ZG_IMAGES[] = {"Preset", ZG_COMPILED_SOURCE_NAMES, 0};
+#else
+#define ZG_FUNE_IMAGE_MAX 7
 static const char *const ZG_IMAGES[] = {"Preset", "Locked Bloom", "Bloom Bark", "Formant Snarl", "Upper Chop", "Split Maul", "Crushed Teeth", "Harmonic Rip", 0};
+#endif
 static const char *const ZG_TUNINGS[] = {"Preset", "12 EDO", "19 EDO", "24 EDO", "13 EDO tritave", 0};
 static const char *const ZG_ROLLS[] = {"Preset", "Off", "Quarter", "Eighth", "Triplet", "Sixteenth", "Sextuplet", "Thirty-second", 0};
-static const char *const ZG_SUBMODES[] = {"Preset", "Moving root", "Pedal C", 0};
+static const char *const ZG_SUBMODES[] = {"Preset", "Half pitch", "Fixed pedal", 0};
 static const char *const ZG_SUSTAINS[] = {"Preset", "Finite source", "Sustain loop", 0};
 static const char *const ZG_RATES[] = {
     "Preset", "40", "42", "44", "46", "48", "50", "52", "54", "56", "58", "60", "62", "64", "66", "68", "70", "73", "75", "77", "79", "81", "83", "85", "87", "89", "91", "93", "95", "97", "99", "101", "103", "106", "108", "110", "112", "114", "116", "118", "120", "122", "124", "126", "128", "130", "132", "134", "136", "139", "141", "143", "145", "147", "149", "151", "153", "155", "157", "159", "161", "163", "165", "167", "170", "172", "174", "176", "178", "180", "182", "184", "186", "188", "190", "192", "194", "196", "198", "200", "203", "205", "207", "209", "211", "213", "215", "217", "219", "221", "223", "225", "227", "229", "231", "233", "236", "238", "240", "242", "244", "246", "248", "250", "252", "254", "256", "258", "260", "262", "264", "266", "269", "271", "273", "275", "277", "279", "281", "283", "285", "287", "289", "291", "293", "295", "297", "300", 0
@@ -212,7 +226,7 @@ static const KEngine ZG_DESC = {
         {"VOWL", KF_BIPCT, -127, 127, 0, 0, 0},
         {"PRST", KF_ENUM, 0, 35, 0, zg_preset_names, 0},
         {"MODE", KF_ENUM, 0, 3, 0, ZG_MODES, 0},
-        {"IMAG", KF_ENUM, 0, 7, 0, ZG_IMAGES, 0},
+        {"IMAG", KF_ENUM, 0, ZG_FUNE_IMAGE_MAX, 0, ZG_IMAGES, 0},
         {"TUNE", KF_ENUM, 0, 4, 0, ZG_TUNINGS, 0},
         {"LINE", KF_BIPCT, -127, 127, 0, 0, 0},
         {"EXCT", KF_BIPCT, -127, 127, 0, 0, 0},

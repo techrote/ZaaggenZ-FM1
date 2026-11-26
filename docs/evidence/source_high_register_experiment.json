@@ -1,0 +1,240 @@
+{
+  "candidate_filter": {
+    "cutoffs_hz": [
+      49,
+      50,
+      50.5
+    ],
+    "sample_rate_hz": 48000,
+    "stored_rate_hz": 172.265625,
+    "taps": 32769,
+    "window": [
+      "kaiser",
+      8.6
+    ]
+  },
+  "decision": "Keep ten levels. Conventional512x would remove48Hz fundamental; narrower filters at existing256x stored rate worsened finite-event SNR and reduced fundamental-band energy. Residual high-register aliasing remains explicitly documented.",
+  "qualification": "Offline filter experiment with the C decoder integer interpolation arithmetic; actual production C results are in architecture_comparison.json.",
+  "ratio": 413.4375,
+  "source_bank_sha256": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
+  "source_decoder_sha256": "4c4e3b5e962224e43e5b8ecb04f959edd73f9e54cd05f207a0f0303287576b25",
+  "sources": [
+    {
+      "49.0": {
+        "correlation": 0.9678690125553764,
+        "peak_absolute_error": 0.2030431099555513,
+        "rms_reconstructed": 0.18682279580850328,
+        "rms_reference": 0.26081588192525773,
+        "snr_db": 8.976277965029809
+      },
+      "50.0": {
+        "correlation": 0.9821132896420545,
+        "peak_absolute_error": 0.1571446724555513,
+        "rms_reconstructed": 0.20977904846886455,
+        "rms_reference": 0.26081588192525773,
+        "snr_db": 11.734233344637175
+      },
+      "50.5": {
+        "correlation": 0.9846238691145112,
+        "peak_absolute_error": 0.1437169380805513,
+        "rms_reconstructed": 0.2173609654912234,
+        "rms_reference": 0.26081588192525773,
+        "snr_db": 12.725439611668403
+      },
+      "base": {
+        "correlation": 0.9848380995313675,
+        "peak_absolute_error": 0.1124669380805513,
+        "rms_reconstructed": 0.23205813226485866,
+        "rms_reference": 0.26081588192525773,
+        "snr_db": 14.07107158233967
+      },
+      "name": "locked_bloom"
+    },
+    {
+      "49.0": {
+        "correlation": 0.9822321868354766,
+        "peak_absolute_error": 0.1655493372409632,
+        "rms_reconstructed": 0.3914619357734632,
+        "rms_reference": 0.4314022683440501,
+        "snr_db": 14.322706460905867
+      },
+      "50.0": {
+        "correlation": 0.9881621793465202,
+        "peak_absolute_error": 0.13306345491439142,
+        "rms_reconstructed": 0.4023085172197647,
+        "rms_reference": 0.4314022683440501,
+        "snr_db": 16.60950951694655
+      },
+      "50.5": {
+        "correlation": 0.9885314886300786,
+        "peak_absolute_error": 0.1277075403659632,
+        "rms_reconstructed": 0.4042731071346806,
+        "rms_reference": 0.4314022683440501,
+        "snr_db": 17.151412559317592
+      },
+      "base": {
+        "correlation": 0.9876146243795136,
+        "peak_absolute_error": 0.11979510605200573,
+        "rms_reconstructed": 0.41307830748844526,
+        "rms_reference": 0.4314022683440501,
+        "snr_db": 17.939986642464117
+      },
+      "name": "zaag.bloom-bark"
+    },
+    {
+      "49.0": {
+        "correlation": 0.9772616017496472,
+        "peak_absolute_error": 0.18373116102325782,
+        "rms_reconstructed": 0.27252301300035625,
+        "rms_reference": 0.3445370061059807,
+        "snr_db": 10.691087940974725
+      },
+      "50.0": {
+        "correlation": 0.9852282429376543,
+        "peak_absolute_error": 0.14575953799076635,
+        "rms_reconstructed": 0.2953278107471548,
+        "rms_reference": 0.3445370061059807,
+        "snr_db": 13.192337529981659
+      },
+      "50.5": {
+        "correlation": 0.9868590301414891,
+        "peak_absolute_error": 0.14575953799076635,
+        "rms_reconstructed": 0.3029012151331615,
+        "rms_reference": 0.3445370061059807,
+        "snr_db": 14.102735069169292
+      },
+      "base": {
+        "correlation": 0.9838531491545105,
+        "peak_absolute_error": 0.15366415164179492,
+        "rms_reconstructed": 0.31388536919117166,
+        "rms_reference": 0.3445370061059807,
+        "snr_db": 14.605445613753528
+      },
+      "name": "zaag.formant-snarl"
+    },
+    {
+      "49.0": {
+        "correlation": 0.9817824544030421,
+        "peak_absolute_error": 0.18595645757588025,
+        "rms_reconstructed": 0.25875732157426684,
+        "rms_reference": 0.34070334293874893,
+        "snr_db": 10.690977683469058
+      },
+      "50.0": {
+        "correlation": 0.9870796481600116,
+        "peak_absolute_error": 0.15138648744968564,
+        "rms_reconstructed": 0.2794012645400476,
+        "rms_reference": 0.34070334293874893,
+        "snr_db": 12.722715888550107
+      },
+      "50.5": {
+        "correlation": 0.9877206645639562,
+        "peak_absolute_error": 0.15138648744968564,
+        "rms_reconstructed": 0.2862645925891361,
+        "rms_reference": 0.34070334293874893,
+        "snr_db": 13.366746051050065
+      },
+      "base": {
+        "correlation": 0.9809835812133015,
+        "peak_absolute_error": 0.16383765932468564,
+        "rms_reconstructed": 0.3031115169321082,
+        "rms_reference": 0.34070334293874893,
+        "snr_db": 13.397062974996327
+      },
+      "name": "zaag.upper-chop"
+    },
+    {
+      "49.0": {
+        "correlation": 0.9687070726561484,
+        "peak_absolute_error": 0.5328345178864944,
+        "rms_reconstructed": 0.5924786717539426,
+        "rms_reference": 0.7454232026930192,
+        "snr_db": 10.373564794528606
+      },
+      "50.0": {
+        "correlation": 0.9731468238879307,
+        "peak_absolute_error": 0.469264058730013,
+        "rms_reconstructed": 0.6140353969028675,
+        "rms_reference": 0.7454232026930192,
+        "snr_db": 11.247798913431524
+      },
+      "50.5": {
+        "correlation": 0.9766143508274218,
+        "peak_absolute_error": 0.469264058730013,
+        "rms_reconstructed": 0.6208010013222849,
+        "rms_reference": 0.7454232026930192,
+        "snr_db": 11.754681138011268
+      },
+      "base": {
+        "correlation": 0.9712388811139543,
+        "peak_absolute_error": 0.479273824355013,
+        "rms_reconstructed": 0.6510735169913858,
+        "rms_reference": 0.7454232026930192,
+        "snr_db": 11.78854592005106
+      },
+      "name": "zaag.split-maul"
+    },
+    {
+      "49.0": {
+        "correlation": 0.9811978333732937,
+        "peak_absolute_error": 0.142758734659018,
+        "rms_reconstructed": 0.2249288024063614,
+        "rms_reference": 0.2879254662334199,
+        "snr_db": 11.129416339055634
+      },
+      "50.0": {
+        "correlation": 0.9858039129574355,
+        "peak_absolute_error": 0.15296041103456437,
+        "rms_reconstructed": 0.23839805760699792,
+        "rms_reference": 0.2879254662334199,
+        "snr_db": 12.77774325146894
+      },
+      "50.5": {
+        "correlation": 0.9868224079890482,
+        "peak_absolute_error": 0.15296041103456437,
+        "rms_reconstructed": 0.24211481967076715,
+        "rms_reference": 0.2879254662334199,
+        "snr_db": 13.278593658071092
+      },
+      "base": {
+        "correlation": 0.9851992130211815,
+        "peak_absolute_error": 0.162045844034018,
+        "rms_reconstructed": 0.24808981871183428,
+        "rms_reference": 0.2879254662334199,
+        "snr_db": 13.520778984783703
+      },
+      "name": "zaag.crushed-teeth"
+    },
+    {
+      "49.0": {
+        "correlation": 0.9730277455793793,
+        "peak_absolute_error": 0.11974297716362003,
+        "rms_reconstructed": 0.1293673993428531,
+        "rms_reference": 0.17158352762949536,
+        "snr_db": 9.97004277802291
+      },
+      "50.0": {
+        "correlation": 0.9790080081892781,
+        "peak_absolute_error": 0.11974297716362003,
+        "rms_reconstructed": 0.14023505196464703,
+        "rms_reference": 0.17158352762949536,
+        "snr_db": 11.710836359465036
+      },
+      "50.5": {
+        "correlation": 0.978948382076515,
+        "peak_absolute_error": 0.12657891466362003,
+        "rms_reconstructed": 0.14337468387209823,
+        "rms_reference": 0.17158352762949536,
+        "snr_db": 12.074145975432312
+      },
+      "base": {
+        "correlation": 0.9760565669306076,
+        "peak_absolute_error": 0.10022772596137997,
+        "rms_reconstructed": 0.16039258122298133,
+        "rms_reference": 0.17158352762949536,
+        "snr_db": 13.110552595774227
+      },
+      "name": "zaag.harmonic-rip"
+    }
+  ]
+}

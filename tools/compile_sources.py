@@ -14,6 +14,7 @@ import importlib.util
 import json
 import math
 import os
+from fractions import Fraction
 from pathlib import Path
 import subprocess
 import sys
@@ -30,11 +31,14 @@ LOCKED_SHA = "25eabbe29b4ea4a2930acd700a32af141cfe72337b1b88edc7dee3476d09fe65"
 DEFAULT_IDS = ["locked_bloom", "zaag.bloom-bark", "zaag.formant-snarl",
                "zaag.upper-chop", "zaag.split-maul", "zaag.crushed-teeth",
                "zaag.harmonic-rip"]
-RATE = 22050
+RATE = 44100
 REFERENCE_RATE = 48000
 PCM_SHIFT = 3
-CROSSFADE = 512
-MIP_COUNT = 8
+CROSSFADE = 1024
+MIP_DENOMINATORS = [160, 240, *[320 << j for j in range(8)]]
+MIP_COUNT = len(MIP_DENOMINATORS)
+MULAW = 255.
+MAX_BANK_BYTES = 260000
 RECIPE_NODE_TYPES = {
     "core.identity.v1", "core.gain.v1", "core.tanh.v1", "core.hard_clip.v1",
     "core.tanh_aa.v1", "core.hard_clip_aa.v1", "core.multiband_gain.v1",
@@ -72,8 +76,18 @@ def recover(reference: Path, work: Path):
 def read_spec(path: Path | None):
     if path is None:
         return [{"source_id": name} for name in DEFAULT_IDS]
-    d = json.loads(path.read_text())
-    if not isinstance(d, dict) or set(d) != {"version", "sources"} or d["version"] != 1:
+    if path.stat().st_size > 2_000_000:
+        raise ValueError("source recipe exceeds two-megabyte JSON bound")
+    def pairs(items):
+        out = {}
+        for key, value in items:
+            if key in out: raise ValueError("duplicate source recipe key: " + key)
+            out[key] = value
+        return out
+    def bad_constant(value):
+        raise ValueError("nonfinite source recipe number: " + value)
+    d = json.loads(path.read_text(), object_pairs_hook=pairs, parse_constant=bad_constant)
+    if not isinstance(d, dict) or set(d) != {"version", "sources"} or type(d["version"]) is not int or d["version"] != 1:
         raise ValueError("source spec must contain exactly version:1 and sources")
     if not isinstance(d["sources"], list) or not 1 <= len(d["sources"]) <= 8:
         raise ValueError("source spec requires 1..8 source entries")
@@ -101,6 +115,8 @@ def import_render_recipe(path: Path):
     sample. The unsupported owner domains fail before any rendering is started.
     """
     from zaaggenz_contracts import Contract
+    if path.stat().st_size > 2_000_000:
+        raise ValueError("RenderRecipe exceeds two-megabyte JSON bound")
     contract = Contract.from_json(path.read_bytes())
     d = contract.to_dict()
     if d.get("kind") != "RenderRecipe":
@@ -112,6 +128,10 @@ def import_render_recipe(path: Path):
             raise ValueError(f"unsupported recipe owner domain: {key}; compile a single source event")
     if 'rack' in d:
         raise ValueError("spectral rack recipes remain desktop-only")
+    if d['phase_policy'] not in ('legacy-v1.2.1', 'source-derived'):
+        raise ValueError("source import has no prior phase checkpoint; phase policy unsupported")
+    if d['tail']['mode'] not in ('legacy', 'preserve') or d['tail']['maximum_samples'] != 0:
+        raise ValueError("source import preserves the natural event; gated/capped tail policy requires a phrase")
     if d['source']['method'] != 'legacy.synth.1.2.1':
         raise ValueError("unsupported source method")
     params = d['source']['params']
@@ -123,6 +143,9 @@ def import_render_recipe(path: Path):
     tm = d['time_map']
     if tm['origin_sample'] != 0 or len(tm['tempo_segments']) != 1:
         raise ValueError("source compilation requires a single tempo and zero time origin")
+    segment=tm['tempo_segments'][0]
+    if segment['beat'] != '0/1' or abs(float(Fraction(segment['bpm']))-float(params['bpm'])) > 1e-10:
+        raise ValueError("single source tempo must agree with its time map at beat zero")
     if len(d['nodes']) > 16 or any(n['type_id'] not in RECIPE_NODE_TYPES for n in d['nodes']):
         raise ValueError("unsupported or excessive DSP graph: maximum 16 inspected node types")
     if any(len(n['automation']) > 8 or any(len(lane['points']) > 256 for lane in n['automation']) for n in d['nodes']):
@@ -189,16 +212,22 @@ def taper_tail(x):
     return y
 
 
+def decode_table():
+    return np.asarray([(-1 if q & 128 else 1) * round(np.expm1((q & 127)/127*np.log1p(MULAW))/MULAW*32767)
+                       for q in range(256)], dtype='<i2')
+
+
 def quantize(x):
     # A common, explicit binary encoding scale preserves inter-family level.
     # No peak or RMS normalization and no waveform-dependent compensation.
-    q = np.rint(np.asarray(x) * (32768. / (1 << PCM_SHIFT)))
-    if np.max(abs(q), initial=0.) > 32767:
+    x = np.asarray(x, dtype=np.float64)
+    if not np.isfinite(x).all() or np.max(abs(x), initial=0.) >= 8.:
         raise ValueError("source exceeds the common ±8 encoding range; reject instead of normalize")
-    return q.astype("<i2")
+    q = np.rint(np.log1p(MULAW*np.abs(x)/8.) / np.log1p(MULAW) * 127).astype(np.uint8)
+    return q | ((x < 0).astype(np.uint8) << 7)
 
 
-def choose_loop(x):
+def choose_loop(x, rate=22050, crossfade=512):
     """Select a four-plus-period segment with similar crossfade windows.
 
     This is a causal sustain reinterpretation, not a claim that the transient
@@ -210,25 +239,26 @@ def choose_loop(x):
         return 0, 0, {"overlap_samples": 0, "policy": "finite-only; source too short for bounded sustain"}
     start = int(n * .32)
     candidates = range(int(n * .72), int(n * .88))
-    a = x[start:start+CROSSFADE]
+    a = x[start:start+crossfade]
     best = None
     for end in candidates:
-        b = x[end-CROSSFADE:end]
+        b = x[end-crossfade:end]
         e = float(np.mean((a-b)**2))
         if best is None or e < best[0]: best = (e, end)
     end = best[1]
     return start, end, {
-        "overlap_samples": CROSSFADE,
+        "overlap_samples": crossfade,
         "overlap_rms_error": math.sqrt(best[0]),
-        "raw_boundary_jump": float(abs(x[end-1]-x[start+CROSSFADE])),
-        "loop_period_ms": 1000. * (end-start-CROSSFADE) / RATE,
+        "raw_boundary_jump": float(abs(x[end-1]-x[start+crossfade])),
+        "loop_period_ms": 1000. * (end-start-crossfade) / rate,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
     }
 
 
-def decode(q, frames, step=.5):
+def decode(q, frames, step=1.):
     pos = np.arange(int(math.ceil(frames / step)), dtype=np.float64) * step
-    return np.interp(pos, np.arange(len(q)), q, right=0.) * ((1 << PCM_SHIFT) / 32768.)
+    words = decode_table()[np.asarray(q, dtype=np.uint8)]
+    return np.interp(pos, np.arange(len(q)), words, right=0.) * ((1 << PCM_SHIFT) / 32768.)
 
 
 def describe(reference, reconstructed):
@@ -251,7 +281,9 @@ def compile_bank(reference, work, output, manifest_path, wav_dir, spec_path=None
                if render_recipe_paths else read_spec(spec_path))
     if not 1 <= len(entries) <= 8:
         raise ValueError("at most eight imported recipes fit the bounded bank format")
-    blocks, metadata = [], []
+    table = decode_table()
+    blocks, metadata = ['const int16_t zg_source_decode_table[256] = {\n    ' +
+                        ',\n    '.join(', '.join(str(int(v)) for v in table[j:j+16]) for j in range(0,256,16)) + '\n};\n'], []
     total = 0
     if wav_dir: wav_dir.mkdir(parents=True, exist_ok=True)
     for i, entry in enumerate(entries):
@@ -261,17 +293,24 @@ def compile_bank(reference, work, output, manifest_path, wav_dir, spec_path=None
             raise ValueError("bank source must be finite and at most one second")
         conditioned = taper_tail(raw)
         mips = []
-        for level in range(MIP_COUNT):
-            # 48000 -> 22050 / 2**level, explicit polyphase antialias filtering.
-            filtered = signal.resample_poly(conditioned, 147, 320 << level,
+        for level, denominator in enumerate(MIP_DENOMINATORS):
+            # Explicit polyphase antialias filtering at each declared level.
+            filtered = signal.resample_poly(conditioned, 147, denominator,
                                             window=("kaiser", 8.6))
             q = quantize(filtered)
-            q = np.r_[q, np.int16(0)].astype("<i2")
+            q = np.r_[q, np.uint8(0)].astype(np.uint8)
             mips.append(q)
             total += q.nbytes
             values = [", ".join(str(int(v)) for v in q[j:j+16]) for j in range(0, len(q), 16)]
-            blocks.append(f"static const int16_t zg_source_{i}_{level}[{len(q)}] = {{\n    " + ",\n    ".join(values) + "\n};\n")
-        start, end, loop = choose_loop(mips[0][:-1] * (8./32768.))
+            blocks.append(f"static const uint8_t zg_source_{i}_{level}[{len(q)}] = {{\n    " + ",\n    ".join(values) + "\n};\n")
+        # Keep the established sustain segment timing: matching is performed on
+        # the original 22.05 kHz linear PCM condition, then mapped exactly 2x.
+        match = signal.resample_poly(conditioned,147,320,window=("kaiser",8.6))
+        match = np.rint(match * 4096.) / 4096.
+        start, end, loop = choose_loop(match)
+        start *= 2; end *= 2
+        loop['matching_rate_hz'] = 22050
+        loop['bank_overlap_samples'] = 1024 if end else 0
         target = signal.resample_poly(conditioned, 147, 160, window=("kaiser", 8.6))
         decoded = decode(mips[0], len(mips[0])-1)
         # A single-cycle comparator explicitly measures the discarded temporal
@@ -287,6 +326,7 @@ def compile_bank(reference, work, output, manifest_path, wav_dir, spec_path=None
                   peak=float(np.max(abs(raw))), sample_rate=RATE, root_hz=48,
                   pcm_shift=PCM_SHIFT, frames=[len(q)-1 for q in mips],
                   pcm_sha256=[sha(q.tobytes()) for q in mips],
+                  decoded_pcm_sha256=[sha(table[q].astype('<i2').tobytes()) for q in mips],
                   loop_start=start, loop_end=end, loop=loop,
                   full_image_measurements=describe(target, decoded),
                   single_cycle_measurements=describe(target, cycle_decoded),
@@ -300,12 +340,14 @@ def compile_bank(reference, work, output, manifest_path, wav_dir, spec_path=None
                           np.asarray(np.rint(np.clip(target/8., -1., 1.)*32767), dtype=np.int16))
             wavfile.write(wav_dir / f"{label}-image.wav", 44100,
                           np.asarray(np.rint(np.clip(decoded/8., -1., 1.)*32767), dtype=np.int16))
-    if total > 190000:
-        raise ValueError(f"bank exceeds 190000-byte hard limit: {total}")
+    if total + table.nbytes > MAX_BANK_BYTES:
+        raise ValueError(f"bank exceeds {MAX_BANK_BYTES}-byte hard limit: {total + table.nbytes}")
     text = "/* Generated by tools/compile_sources.py; DO NOT EDIT.\n"
     text += f" * Source: techrote/zaaggenz@{head}\n"
     text += " * Derived assets: LicenseRef-Owner-Provided-Unspecified.\n"
-    text += " * Common fixed encoding scale = 1/8; decoded without normalization. */\n\n"
+    text += " * mu-law8, mu=255; common fixed encoding scale = 1/8; no normalization. */\n\n"
+    text += f"#define ZG_COMPILED_SOURCE_COUNT {len(metadata)}\n"
+    text += "#define ZG_COMPILED_SOURCE_NAMES " + ', '.join(json.dumps(m['source_id']) for m in metadata) + "\n\n"
     text += "\n".join(blocks)
     text += f"\nconst unsigned zg_source_count = {len(metadata)}u;\n"
     text += "const zg_source_info zg_source_bank[] = {\n"
@@ -313,24 +355,29 @@ def compile_bank(reference, work, output, manifest_path, wav_dir, spec_path=None
         i = md['index']
         arrays = ", ".join(f"zg_source_{i}_{j}" for j in range(MIP_COUNT))
         frames = ", ".join(f"{v}u" for v in md['frames'])
-        text += f'    {{"{md["source_id"]}", {{{arrays}}}, {{{frames}}}, {md["loop_start"]}u, {md["loop_end"]}u, 48u, 22050u, 3u}},\n'
+        text += f'    {{"{md["source_id"]}", {{{arrays}}}, {{{frames}}}, {md["loop_start"]}u, {md["loop_end"]}u, 48u, 44100u, 3u}},\n'
     text += "};\n"
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(text)
-    manifest = dict(format="zg-source-bank", version=1,
+    # The generated hash is over canonical LF/UTF-8 bytes, also on Windows.
+    output.write_bytes(text.encode('utf-8'))
+    manifest = dict(format="zg-source-bank", version=2,
         upstream_repository="https://github.com/techrote/zaaggenz", upstream_commit=head,
         recovered_payload_sha256=PAYLOAD_SHA, locked_bloom_anchor_sha256=LOCKED_SHA,
         license="LicenseRef-Owner-Provided-Unspecified",
         toolchain=dict(python=sys.version.split()[0], numpy=np.__version__, scipy=scipy.__version__),
-        representation=f"{len(metadata)} bounded post-topology source images, eight antialiased mips",
-        encoding="int16 little-endian /4096; common gain restored in Q15 decoder",
+        representation=f"{len(metadata)} bounded post-topology source images, 44.1/29.4/22.05 kHz plus seven half-rate mips",
+        encoding="mu-law8 sign-magnitude, mu=255; fixed 256-entry int16 LUT; common gain 8 restored in Q15 decoder",
         output_policy="no per-source normalization; 2ms terminal taper before resampling",
         audition_gain_db=-18.06179973983887,
         transposition="source-derived varispeed; pitch changes source duration",
-        state_bytes=16, pcm_flash_bytes=total, generated_sha256=sha(text.encode()), sources=metadata)
+        state_bytes=16, mip_count=MIP_COUNT,
+        mip_rates_hz=[REFERENCE_RATE*147/d for d in MIP_DENOMINATORS],
+        pcm_flash_bytes=total, decode_lut_bytes=table.nbytes,
+        total_asset_flash_bytes=total+table.nbytes, decode_lut_sha256=sha(table.tobytes()),
+        generated_sha256=sha(text.encode()), sources=metadata)
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-    print(json.dumps({"bank_bytes": total, "sources": len(metadata), "generated_sha256": manifest['generated_sha256'],
+    manifest_path.write_bytes((json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode('utf-8'))
+    print(json.dumps({"bank_bytes": total+table.nbytes, "sources": len(metadata), "generated_sha256": manifest['generated_sha256'],
                       "anchor_exact": any(s['source_id'] == 'locked_bloom' and s['source_pcm_sha256'] == LOCKED_SHA for s in metadata),
                       "output": str(output)}))
     return manifest

@@ -32,6 +32,10 @@ def generate():
         vals = [min(v, 0x73333333) for v in vals]  # cap at .45 Fs
         pitch += ['  {'] + ['    ' + ', '.join(str(v)+'u' for v in vals[i:i+8]) + ',' for i in range(0,128,8)] + ['  },']
     pitch += ['};', '']
+    pitch += ['static const uint32_t BEND_RATIO_Q20[401] = {']
+    bend=[round(2**(c/1200)*2**20) for c in range(-200,201)]
+    pitch += ['  '+', '.join(str(v)+'u' for v in bend[i:i+8])+',' for i in range(0,len(bend),8)]
+    pitch += ['};','']
     return {ROOT / 'src/presets.c': '\n'.join(rows), ROOT / 'src/pitch_tables.inc': '\n'.join(pitch)}
 
 

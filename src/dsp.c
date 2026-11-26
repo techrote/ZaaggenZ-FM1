@@ -101,8 +101,9 @@ void zg_dsp_prepare(zg_dsp_coeffs *c, const zg_dsp_params *p,
     c->bloom_step=(uint16_t)limit((int32_t)(1310720u/rate),1,32767);
     c->attack_frames=(uint16_t)(rate/350u);
     c->attack_step=(uint16_t)(32768u/c->attack_frames);
-    /* Up to 16 actual native partials; the additive input never crosses 0.42Fs.
-     * Waveshaping images are measured separately, not labeled bandlimited. */
+    /* Up to 16 native partials below 0.42Fs; retain the fundamental alone
+     * up to the engine pitch ceiling (0.45Fs). Waveshaping images are measured
+     * separately and are not labeled bandlimited. */
     {
         uint32_t count=increment ? 0x6b851eb8u/increment : 16u;
         if(count>16u)count=16u;

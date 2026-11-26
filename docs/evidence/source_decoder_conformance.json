@@ -1,0 +1,49 @@
+{
+  "decoder_bytes": [
+    {
+      "bytes": 25648,
+      "sha256": "a06c11646f1b4f13ef09868301ea75eedbd3069ccd4a3b74d8cb74657328d1a4",
+      "source_id": "locked_bloom"
+    },
+    {
+      "bytes": 26742,
+      "sha256": "48d804a0844c41f23c416ad19ae833dbaca450fc5c2c393bbd1def66f2dc600b",
+      "source_id": "zaag.bloom-bark"
+    },
+    {
+      "bytes": 26742,
+      "sha256": "ca75dc8dbdb9f454504075fecced16cdec1becb3c8c5576b0f45335b7644e28b",
+      "source_id": "zaag.formant-snarl"
+    },
+    {
+      "bytes": 26742,
+      "sha256": "8e2d0c74aceac05a70fa9ed06e87ff748ee1da84b6769ad64b8eeb12e96a367f",
+      "source_id": "zaag.upper-chop"
+    },
+    {
+      "bytes": 26742,
+      "sha256": "c2a34f10cefae2e275052c92f303d15633fe20e36dfd0a8bc069d196cb27dc58",
+      "source_id": "zaag.split-maul"
+    },
+    {
+      "bytes": 26742,
+      "sha256": "242829b9b7e0a3202e1548656c5bb6b2ebaed7bba53d0b9418c634c28193751e",
+      "source_id": "zaag.crushed-teeth"
+    },
+    {
+      "bytes": 26742,
+      "sha256": "8dc30ff247743cd00c7c244ab59a2a212e2d9990f5d7dbbdfbb9ea2252c52b8b",
+      "source_id": "zaag.harmonic-rip"
+    }
+  ],
+  "format_version": 2,
+  "generated_sha256": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
+  "midi_keys_checked": 128,
+  "non_octave_edge_steps_checked": [
+    3092,
+    8191,
+    27095040
+  ],
+  "qualification": "host C decode; not hardware timing or listening qualification",
+  "status": "PASS"
+}

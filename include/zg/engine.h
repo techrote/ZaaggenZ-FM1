@@ -54,6 +54,7 @@ typedef struct zg_engine {
     int32_t source_low, master_dc, last_output;
     uint16_t grit, motion, vowel;
     uint16_t level_gain[ZG_LAYER_COUNT], output_gain;
+    int16_t bend_cents;
     uint16_t fade;
     uint8_t note, velocity, gate, stage;
     uint8_t preset, mute_mask, bypass_character, held;
@@ -69,6 +70,7 @@ void zg_engine_init(zg_engine *e, uint32_t sample_rate);
 void zg_engine_set_preset(zg_engine *e, unsigned preset);
 void zg_engine_set_patch(zg_engine *e, const zg_patch *patch);
 void zg_engine_set_macro(zg_engine *e, unsigned macro, unsigned value);
+void zg_engine_pitch_bend(zg_engine *e, int cents); /* standalone expression, +/-200 cents */
 void zg_engine_note_on(zg_engine *e, unsigned note, unsigned velocity, int legato);
 void zg_engine_note_off(zg_engine *e, unsigned note);
 void zg_engine_all_notes_off(zg_engine *e);

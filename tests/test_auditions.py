@@ -21,9 +21,10 @@ def read_wav(path):
     with wave.open(str(path), 'rb') as wav:
         assert wav.getnchannels()==1 and wav.getsampwidth()==2
         rate=wav.getframerate();frames=wav.getnframes()
-        audio=np.frombuffer(wav.readframes(frames), dtype='<i2').astype(np.float64)/32768.
+        pcm=wav.readframes(frames)
+        audio=np.frombuffer(pcm, dtype='<i2').astype(np.float64)/32768.
     assert audio.size==frames and frames>rate
-    return audio,rate
+    return audio,rate,hashlib.sha256(pcm).hexdigest()
 
 
 def qualify(renderer, directory, seconds=3, workers=2):
@@ -39,7 +40,7 @@ def qualify(renderer, directory, seconds=3, workers=2):
         result=json.loads(subprocess.check_output([
             str(renderer),'--preset',str(index),'--pattern','riff',
             '--note','36','--seconds',str(seconds),'--out',str(path)],text=True))
-        a,rate=read_wav(path)
+        a,rate,pcm_digest=read_wav(path)
         active=a[:seconds*rate]
         size=4096;hop=2048;window=np.hanning(size)
         power=np.mean([np.abs(np.fft.rfft(active[i:i+size]*window))**2
@@ -47,7 +48,7 @@ def qualify(renderer, directory, seconds=3, workers=2):
         hz=np.fft.rfftfreq(size,1/rate)
         total=float(power.sum())
         assert total>1e-12, f'{name}: silence'
-        result.update(name=name,pcm_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        result.update(name=name,pcm_sha256=pcm_digest,
                       spectral_centroid_hz=float(np.dot(power,hz)/total),
                       dc_mean=float(a.mean()),
                       maximum_adjacent_jump=float(np.max(np.abs(np.diff(a)))),
@@ -87,4 +88,4 @@ if __name__=='__main__':
         args.out.parent.mkdir(parents=True,exist_ok=True);args.out.write_text(json.dumps(report,indent=2)+'\n')
     print(f"Auditions PASS: {report['preset_count']} playable preset WAVs, zero clipped frames; "
           f"maximum final-50ms RMS {report['maximum_final_50ms_rms']:.6f}; "
-          f"centroid range {report['spectral_centroid_range_hz'][0]:.0f}–{report['spectral_centroid_range_hz'][1]:.0f} Hz")
+          f"centroid range {report['spectral_centroid_range_hz'][0]:.0f}-{report['spectral_centroid_range_hz'][1]:.0f} Hz")

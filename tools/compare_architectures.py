@@ -12,6 +12,7 @@ import math
 from pathlib import Path
 import subprocess
 import sys
+from fractions import Fraction
 sys.dont_write_bytecode = True
 import numpy as np
 from scipy import signal
@@ -68,19 +69,20 @@ def main():
     for i, name in enumerate(compiler.DEFAULT_IDS):
         raw, _, _ = compiler.source_render({"source_id": name})
         original = compiler.taper_tail(raw)
-        source = probe(a.source_probe, [i,32768,0])
+        source = probe(a.source_probe, [i,65536,0])
         reference = signal.resample_poly(original,147,160,window=("kaiser",8.6))/8.
         row = dict(source_id=name, c_image_metrics=metrics(source,44100),
                    c_image_reference=comparison(reference,source), transpositions=[])
-        for ratio in (1,2,4,8):
-            step = 32768 * ratio
+        for ratio in (1,1.3626331526072845,1.5,2,4,8,32,256,413.4375):
+            step = round(65536 * ratio)
             c_mip = probe(a.source_probe, [i,step,0])
             c_naive = probe(a.source_probe, [i,step,0,0])
-            ideal = signal.resample_poly(original,147,160*ratio,window=("kaiser",8.6))/8.
+            exact=Fraction(44100*65536,48000*step).limit_denominator(20000)
+            ideal = signal.resample_poly(original,exact.numerator,exact.denominator,window=("kaiser",8.6))/8.
             row['transpositions'].append(dict(ratio=ratio,
                 antialiased=comparison(ideal,c_mip), unfiltered=comparison(ideal,c_naive),
                 note="against ideal polyphase varispeed, not duration-preserving FFT pitch shift"))
-        held = probe(a.source_probe, [i,32768,44100])
+        held = probe(a.source_probe, [i,65536,44100])
         row['sustain'] = dict(rendered_samples=len(held), held_samples=44100,
             post_release_samples=max(0,len(held)-44100),
             finite=bool(np.isfinite(held).all()),

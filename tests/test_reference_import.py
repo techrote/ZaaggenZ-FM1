@@ -65,5 +65,36 @@ class RenderRecipeImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'sculpt'):
             self.import_data(d)
 
+    def test_unknown_recipe_fields_rejected_by_real_schema(self):
+        d = json.loads(json.dumps(self.recipe))
+        d['unimplemented_feature'] = True
+        with self.assertRaises(ValueError): self.import_data(d)
+
+    def test_duplicate_recipe_keys_rejected(self):
+        path=Path(self.temp.name)/'duplicate.json'
+        text=json.dumps(self.recipe)
+        path.write_text(text[:-1]+',"kind":"RenderRecipe"}')
+        with self.assertRaises(ValueError): compiler.import_render_recipe(path)
+
+    def test_source_duration_admitted_before_render(self):
+        from zaaggenz_contracts.legacy import freeze_legacy
+        params=dict(self.recipe['source']['params'])
+        params['bpm']=20.
+        d=freeze_legacy(params).to_dict()
+        with self.assertRaisesRegex(ValueError, '1 second'):
+            self.import_data(d)
+
+    def test_phase_and_tail_intent_not_silently_dropped(self):
+        for field,value in (('phase_policy','continuous-integrated'),
+                            ('tail',dict(mode='truncate',maximum_samples=0))):
+            d=json.loads(json.dumps(self.recipe));d[field]=value
+            with self.assertRaises(ValueError): self.import_data(d)
+
+    def test_ambiguous_tempo_rejected(self):
+        d=json.loads(json.dumps(self.recipe))
+        d['time_map']['tempo_segments'][0]['bpm']='190/1'
+        with self.assertRaisesRegex(ValueError,'tempo'):
+            self.import_data(d)
+
 
 if __name__ == '__main__': unittest.main()

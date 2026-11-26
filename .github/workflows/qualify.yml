@@ -25,12 +25,17 @@ jobs:
           cmake --build build/host --parallel 4
           ctest --test-dir build/host --output-on-failure
           python tools/generate_presets.py --check
+          python tools/gen_dsp_tables.py --check
           python -m unittest discover -s tests -p test_source_compiler.py -v
+          python tools/validate_source_bank.py --source-probe build/host/source-probe --full-midi --output build/source-decoder.json
       - name: Acoustic and tuning qualification
         run: |
           python tests/dsp/test_acoustics.py --probe build/host/dsp-probe --out build/acoustics.json
           python tests/dsp/test_pitch.py --probe build/host/pitch-probe --out build/pitch.json
+          python tests/dsp/test_held.py --probe build/host/held-probe --out build/held.json
           python tests/test_auditions.py --renderer build/host/zaag-render --out build/presets.json --audio-dir build/auditions
+      - name: Four-instance 30-minute simulated performance
+        run: build/host/soak-core > build/soak.json
       - name: Authenticate reference and compare real C audio
         run: |
           git clone https://github.com/techrote/zaaggenz.git .upstream/zaaggenz
@@ -47,6 +52,8 @@ jobs:
           ctest --test-dir build/sanitize --output-on-failure
       - name: Package portable renderer and actual audio
         run: python tools/package_delivery.py --build build/host --kind linux --audio build/auditions --comparison build/comparison
+      - name: Verify extracted Linux delivery
+        run: python tools/verify_delivery.py --kind linux --out build/package-linux.json
       - uses: actions/upload-artifact@v4
         with:
           name: ZaaggenZ-Linux-and-comparative-audio
@@ -54,12 +61,43 @@ jobs:
             dist/*.zip
             build/acoustics.json
             build/pitch.json
+            build/held.json
+            build/soak.json
+            build/package-linux.json
+            build/source-decoder.json
             build/presets.json
+          if-no-files-found: error
+          retention-days: 90
+  cross-platform:
+    needs: [linux, windows, fm1]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ZaaggenZ-Linux-and-comparative-audio
+          path: qualified/linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: ZaaggenZ-Windows-Audition
+          path: qualified/windows
+      - name: Verify independent native PCM identity
+        run: python3 tools/compare_platforms.py --linux qualified/linux/build/presets.json --windows qualified/windows/build/presets-windows.json --linux-soak qualified/linux/build/soak.json --windows-soak qualified/windows/build/soak-windows.json --out cross-platform.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZaaggenZ-Cross-platform-evidence
+          path: cross-platform.json
           if-no-files-found: error
           retention-days: 90
   windows:
     runs-on: windows-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,11 +111,15 @@ jobs:
           cmake -S . -B build/host -A x64
           cmake --build build/host --config Release --parallel 4
           ctest --test-dir build/host -C Release --output-on-failure
+          python tools/validate_source_bank.py --source-probe build/host/Release/source-probe.exe --full-midi --output build/source-decoder-windows.json
       - name: Windows acoustic and tuning evidence
         run: |
           python tests/dsp/test_acoustics.py --probe build/host/Release/dsp-probe.exe --out build/acoustics-windows.json
           python tests/dsp/test_pitch.py --probe build/host/Release/pitch-probe.exe --out build/pitch-windows.json
+          python tests/dsp/test_held.py --probe build/host/Release/held-probe.exe --out build/held-windows.json
           python tests/test_auditions.py --renderer build/host/Release/zaag-render.exe --out build/presets-windows.json --audio-dir build/auditions
+      - name: Four-instance 30-minute Windows performance simulation
+        run: build/host/Release/soak-core.exe > build/soak-windows.json
       - name: Native window, controls and WAV export smoke
         shell: pwsh
         run: |
@@ -85,9 +127,11 @@ jobs:
           if (-not $process.WaitForExit(15000)) { $process.Kill(); throw 'Windows UI smoke timed out' }
           if ($process.ExitCode -ne 0) { throw 'Windows UI smoke failed' }
           $report = Get-Content windows-smoke.json | ConvertFrom-Json
-          if (-not $report.native_window_created -or -not $report.core_rendered -or -not $report.wav_exported) { throw 'Incomplete native UI evidence' }
+          if (-not $report.native_window_created -or -not $report.core_rendered -or -not $report.control_handlers_pass -or -not $report.keyboard_and_midi_logic_pass -or -not $report.wav_exported) { throw 'Incomplete native UI evidence' }
       - name: Package portable Windows evaluator
         run: python tools/package_delivery.py --build build/host --kind windows --audio build/auditions
+      - name: Verify extracted portable Windows application
+        run: python tools/verify_delivery.py --kind windows --out build/package-windows.json
       - uses: actions/upload-artifact@v4
         with:
           name: ZaaggenZ-Windows-Audition
@@ -97,6 +141,10 @@ jobs:
             windows-audition.bmp
             build/acoustics-windows.json
             build/pitch-windows.json
+            build/held-windows.json
+            build/soak-windows.json
+            build/package-windows.json
+            build/source-decoder-windows.json
             build/presets-windows.json
           if-no-files-found: error
           retention-days: 90
@@ -114,18 +162,24 @@ jobs:
         run: |
           python tools/test_fune_host.py
           python tools/export_fune_presets.py
+          python tools/export_fune_songs.py
+          python -m unittest discover -s tests -p test_fm1_observer.py -v
+          python -m unittest discover -s tests -p test_fune_transport.py -v
       - name: Real pi32v2 target and resource gates
         run: |
           python tools/get_fune_toolchain.py
           python tools/build_fune.py
           python tools/install_fune.py check build/fm1/zaaggenz.kpl
-      - name: Package installable plugin and native Fune presets
-        run: python tools/package_delivery.py --build build/fm1 --kind fm1 --presets build/fune-presets
+      - name: Package installable plugin, Fune presets and playable songs
+        run: python tools/package_delivery.py --build build/fm1 --kind fm1 --presets build/fune-presets --songs build/fune-songs
+      - name: Verify extracted FM-1 delivery offline
+        run: python tools/verify_delivery.py --kind fm1 --out build/package-fm1.json
       - uses: actions/upload-artifact@v4
         with:
           name: ZaaggenZ-FM1-plugin-and-presets
           path: |
             dist/*.zip
             build/fm1/*.json
+            build/package-fm1.json
           if-no-files-found: error
           retention-days: 90

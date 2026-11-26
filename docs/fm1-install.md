@@ -48,11 +48,16 @@ Use a stopped Fune transport and a USB data cable. Python 3 with `pyserial` is
 needed for the supplied console tools. The `--port` examples use Windows `COM4`;
 select the port shown for your own FM-1. On Linux supply its `/dev/ttyACM...` path.
 
+The installation commands below run from the root of the extracted FM-1 delivery
+bundle, beside `zaaggenz.kpl` and its `tools/` directory. When working directly in
+the source repository, use `build/fm1/zaaggenz.kpl`, `build/fune-presets/` and
+`build/fune-songs/` for the corresponding build outputs.
+
 ```sh
 python -m pip install pyserial
-python tools/install_fune.py check build/fm1/zaaggenz.kpl
+python tools/install_fune.py check zaaggenz.kpl
 python tools/install_fune.py --port COM4 list
-python tools/install_fune.py --port COM4 install build/fm1/zaaggenz.kpl
+python tools/install_fune.py --port COM4 install zaaggenz.kpl
 python tools/install_fune.py --port COM4 list
 ```
 
@@ -65,7 +70,7 @@ most of the small plugin RAM pool; the exact current allocation is reported in
 `zaaggenz.json` beside the image. Other stateful plugins may need to be removed.
 
 Choose **ZaaggenZ** with Fune's ALGORITHM control. On SOUND, the first four knobs
-are CHARACTER, GRIT, MOTION and VOWEL. Press SELECT to reach the next row, then
+are CHARACTER, GRIT, MOTION and VOWEL. Turn SELECT to reach the next row, then
 choose a sound with PRST. The image contains all 36 sounds; no user preset slots
 are needed merely to use them.
 
@@ -88,14 +93,25 @@ the offsets, so the four primary knobs continue to express your performance.
 | SOUND 1 | CHAR: recipe family or override | GRIT offset | MOTN offset | VOWL offset |
 | SOUND 2 | PRST: 36 factory recipes | MODE: native / source image / hybrid | IMAG: captured source | TUNE: 12, 19, 24 EDO or 13-step tritave |
 | EDIT 1 | LINE balance | EXCT balance | BODY balance | AUX balance |
-| EDIT 2 | SUB balance | ROLL subdivision | RATE in BPM | SUBM: moving root or C pedal |
+| EDIT 2 | SUB balance | ROLL subdivision | RATE in BPM | SUBM: half pitch or fixed pedal |
 | EDIT 3 | SEPR spectral separation | GAIN final gain | TAIL: finite image or sustain loop | GLID offset |
+
+Pure Locked Image and Bare Source Lab bypass the live character stage so that
+their compiled source can be heard directly. Selecting an explicit CHAR value
+enables that stage, including on those two recipes. Return CHAR to `Preset` to
+restore the recipe's bypass decision.
 
 Fune's ENV1 is the amplitude envelope. Its LFO/ENV FLT destination moves VOWEL;
 SHP moves GRIT. Pitch modulation, pitch bend, MIDI, host sequencing, step rolls,
 arpeggiation, transport, effects and saving remain Fune workflows. Generic plugin
 voices do not receive the built-in ANALOG engine's glide, so GLID is implemented
 in the shared ZaaggenZ engine.
+
+Fune's default MIDI mapping assigns CC16–19 to CHARACTER, GRIT, MOTION and
+VOWEL, CC7 to the selected track's mixer level and CC10 to its pan. MIDI pitch
+bend follows Fune's two-semitone range. The fixed SUB pedal uses tuning degree
+24; that is C1 in 12 EDO. The moving SUB follows half the SYNTHLINE frequency,
+including when the keyboard uses a non-octave tuning.
 
 RATE controls the instrument's internal motion/roll clock. The current plugin API
 does **not expose host tempo or transport phase**, so internal motion is free
@@ -127,14 +143,64 @@ chosen slot, so first read its contents if it contains a sound you want to keep:
 ```sh
 python tools/fune_slots.py --port COM4 list
 python tools/fune_slots.py --port COM4 pull preset 1 my-preset-backup.fune
-python tools/fune_slots.py check build/fune-presets/01-elastic-bloom.fune
-python tools/fune_slots.py --port COM4 push build/fune-presets/01-elastic-bloom.fune 1
+python tools/fune_slots.py check fune-presets/01-elastic-bloom.fune
+python tools/fune_slots.py --port COM4 push fune-presets/01-elastic-bloom.fune 1
 ```
 
-Open the slot with LOAD on Fune's SAVE/SOUND page. A transfer changes the stored
+To open an imported preset, tap HOME as needed until **MIXER** is shown, then
+SAVE to open song slots, then SAVE again to select SOUND slots. Turn SELECT to
+the chosen slot, press OCT+ for its menu, choose **Load** with SELECT, then press
+OCT+ to execute. Starting from MIXER
+avoids the synth page's separate quick-save action. A transfer changes the stored
 slot, not the sound currently being played. Existing songs retain plugin values
 by the stable `zgf1` ID and parameter labels. The actual-host test verifies both
 range extremes of every parameter survive serialization.
+
+## Six playable demonstration songs
+
+`build/fune-songs/` contains six genuine Fune `.fune` songs, plus stereo WAVs
+rendered after loading those same files through the pinned Fune host. Each song
+has four editable patterns per active track and an eight-scene arrangement.
+The first song uses two source-image tracks; the later songs introduce more
+layers and native/hybrid synthesis. Four-track arrangements are useful hardware
+evaluation material, with their simultaneous real-time cost still unmeasured.
+
+| File | BPM | Active tracks | Musical focus |
+| --- | ---: | ---: | --- |
+| `01-image-launch.fune` | 192 | 2 | Pure Locked Image hook and low Bloom foundation; immediate starting point |
+| `02-vowel-relay.fune` | 200 | 3 | Formant Snarl call-and-response, copper pedal and offbeat syllables |
+| `03-roofline-bounce.fune` | 210 | 3 | Upper Chop bounce, half-time pedal and sparse Harmonic Rip replies |
+| `04-contrary-gears.fune` | 186 | 4 | Split Maul hybrid lead, native bass and complementary rhythmic parts |
+| `05-pixel-choir.fune` | 184 | 3 | Crushed Teeth in 24 EDO, quartertone passing degrees and pedal support |
+| `06-tritave-wire.fune` | 174 | 4 | Harmonic Rip in 13 divisions of a tritave, glide and non-octave harmony |
+
+Use one of the six song slots. As with presets, an explicit push replaces the
+chosen stored slot; back it up first when needed:
+
+```sh
+python tools/fune_slots.py --port COM4 pull song 1 my-song-backup.fune
+python tools/fune_slots.py check fune-songs/01-image-launch.fune
+python tools/fune_slots.py --port COM4 push fune-songs/01-image-launch.fune 1
+```
+
+On the device, tap HOME as needed until **MIXER** is shown, then press SAVE to
+open SONG slots. Turn SELECT to the
+chosen slot, press OCT+, choose **Load** with SELECT, then press OCT+ to load it.
+Open **SONG** with GLO, select the first scene, and press **PLAY** to play its
+eight-scene arrangement. PLAY from a pattern page loops the
+selected patterns instead. Loading deliberately leaves the transport stopped.
+The compact display names fit Fune's ten-character name field; the filenames and
+manifest preserve their full titles.
+
+The exporter verifies each file against Fune's real 3,584-byte song buffer,
+checks its CRC and every saved note, scene, instrument parameter and envelope,
+then renders it twice in fresh processes and requires identical audio. The WAVs
+use MASTER 100, visible track faders and no normalization. Their measured peaks
+and limiter state appear in `manifest.json`; the authored arrangements are
+required to leave Fune's master limiter inactive and finish with no sounding
+voices. The device's physical MASTER setting remains the user's own setting and
+is not stored in the song. Fune retains its own mixer, master DC blocker and
+limiter after the plugin's explicit final-output stage.
 
 ## Replace or remove the plugin
 
@@ -147,7 +213,7 @@ python tools/install_fune.py --port COM4 off 1
 # Restart the FM-1, then check the current image numbers again.
 python tools/install_fune.py --port COM4 list
 python tools/install_fune.py --port COM4 erase 1
-python tools/install_fune.py --port COM4 install build/fm1/zaaggenz.kpl
+python tools/install_fune.py --port COM4 install zaaggenz.kpl
 ```
 
 Holding **HOME while powering on** tells this Fune loader to skip plugins. Its
@@ -160,6 +226,8 @@ writes have not been exercised by this project.
 
 ## Reproduce the target image and host qualification
 
+Run these commands from the source checkout.
+
 ```sh
 # Linux x86-64, including WSL2; compiler download is checksum-pinned.
 python tools/get_fune_toolchain.py
@@ -169,6 +237,7 @@ python tools/build_fune.py --info build/fm1/zaaggenz.kpl
 # Actual host integration and portable preset export.
 python tools/test_fune_host.py
 python tools/export_fune_presets.py
+python tools/export_fune_songs.py
 ```
 
 `build_fune.py` checks every vendored SDK file against `UPSTREAM.json`, compiles
@@ -176,10 +245,62 @@ the same core sources, links four address variants and requires relocation
 agreement. It checks the linked image for float helpers and the known pi32v2
 64-bit-multiply/16-bit-load erratum, enforces actual image RAM and flash bounds,
 and writes the ELF, linker map, symbols, disassembly and a JSON resource report.
+The disassembly check also requires that the actual sample loop and all its
+reachable helpers contain no divide instruction. Its stack report adds generated
+register saves and stack allocations along the longest direct callback path;
+this is a conservative static estimate that excludes the host caller and interrupt
+context, not a measured hardware stack high-water. The source files are hashed
+before and after compilation so a concurrent edit cannot silently produce a
+manifest for a different source state.
 The installer/build helpers from Fune are vendored unchanged with MIT/MPL notices.
+
+To compile an admitted desktop RenderRecipe into an alternate plugin source bank:
+
+```sh
+python tools/compile_sources.py --reference .upstream/zaaggenz \
+  --render-recipe examples/locked_bloom_render_recipe.json
+python tools/build_fune.py \
+  --source-bank build/custom-bank/source_bank_data.inc \
+  --output build/fm1-custom/zaaggenz.kpl --work build/fm1-custom/sdk-work
+```
+
+The target manifest records the custom bank's SHA-256 alongside the exact core
+sources. IMAG uses that bank's generated source names and exact asset count,
+including an eighth source when present. This replaces the embedded source bank;
+factory preset source indices then refer to the replacement assets, with
+out-of-range indices wrapped into the new bank's range. It is an experimental
+sound-bank build, so the factory audio comparisons
+do not qualify its changed sounds. Keep the factory plugin and custom plugin in
+separate output directories. The same RAM, relocation, CRC, float, erratum,
+per-sample division and flash checks apply to both.
 
 For physical evaluation, start with one track and one sustained key, then exercise
 the six families, source modes, note fallback, release, parameter motion and
 maximum roll density. Add tracks one at a time while observing Fune's underrun
 and load diagnostics. Only a measured clean run on the actual FM-1 can establish
 the final simultaneous-track and CPU budget.
+
+The supplied read-only recorder can capture that timing evidence while you play
+or loop a pattern. Start a repeating pattern first, keep it playing throughout the
+window, then run from the extracted bundle:
+
+```sh
+python tools/observe_fm1.py --port COM4 --seconds 60 \
+  --label image-launch-two-tracks --artifact zaaggenz.kpl \
+  --output fm1-image-launch-timing.json
+```
+
+It sends only `stat`, preserves every raw reply, and reports host load-guard
+events, reduced voice caps, repeated DMA halves, stalled counters and timing
+margin. The pinned firmware renders 256-frame DMA halves at 44,117 Hz, about
+5.803 ms each, and begins reducing voice capacity beyond its 90% guard budget
+of 5,221 µs. Those are source-derived deadlines, not measured plugin timings.
+The reported worst interrupt is cumulative since the firmware last reset its
+diagnostic counters and can include earlier activity. The recorder does not
+reset them, alter playback, or write flash. A clean timing observation still
+does not establish audible quality, hardware stack high-water or exact installed
+binary identity; the report keeps those qualifications open.
+
+Use the concise [physical owner evaluation](owner-evaluation.md) for the first
+installation, recovery sequence and increasing one-track through four-track
+workloads. It includes the required `pyserial` dependency and recording commands.

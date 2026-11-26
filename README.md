@@ -11,11 +11,13 @@ Download the Windows package from the latest successful **Native instrument qual
 - Press **Play phrase** for an immediate melodic demonstration.
 - Play **Z S X D C V G B H N J M** from C2 or **Q 2 W 3 E R 5 T 6 Y 7 U** from C3.
 - **[ / ]** changes octave, **Space** toggles the phrase, **Escape** releases all notes.
-- Select a MIDI input to use an external keyboard.
+- Select a MIDI input to use an external keyboard. Pitch bend covers +/-200 cents; CC1 controls MOTION, CC71 GRIT, CC74 VOWEL, CC7 output gain, and CC64 sustain.
 - Choose one of **36 factory instruments** and explore **CHARACTER, GRIT, MOTION and VOWEL**. Five layer faders, glide, release, tuning, source selection, rolls and tempo remain accessible.
 - **Export current WAV** renders the embedded core with its complete bounded release tail. The separate `zaag-render.exe` supports riffs, raw/source-bus/layer stems and repeatable benchmarks.
 
 The initial sound uses a preserved source image with live character processing. It retains the authored transient and measured lower host cost. Native and hybrid paths remain distinct musical choices; desktop timing does not establish FM-1 polyphony.
+
+The [playing guide](docs/playbook.md) gives a short audition route, family-specific gestures, layer behavior and tuning examples. The FM-1 package also includes six playable Fune demo songs and their actual-host WAV renders.
 
 ## Implemented instrument
 
@@ -23,12 +25,12 @@ The initial sound uses a preserved source image with live character processing. 
 |---|---|
 | Sources | Native harmonic lattice, seven authenticated post-topology source images, or hybrid blend |
 | Characters | Bloom Bark, Formant Snarl, Upper Chop, Split Maul, Crushed Teeth, Harmonic Rip |
-| Image playback | Eight prefiltered mips, interpolated varispeed, full attack/tail, optional matched sustain loop, smoothed mip changes |
+| Image playback | Ten prefiltered levels including 44.1/29.4 kHz, measured 8-bit companding, interpolated varispeed, full attack/tail, matched sustain loops and smoothed mip changes |
 | Layers | Shared SYNTHLINE + EXCITER character graph; independent persistent BODY, AUX and SUB |
 | Motion | Complementary layers, rhythmic retriggers, moving-root/pedal SUB and bounded glide |
 | Tuning | 12-, 19-, 24-EDO and 13 equal divisions of a tritave |
 | Mix | Explicit smoothed gains, source-role mute before topology, downward-only separation, one final output policy |
-| Fune | ABI 1.4 plugin, four independent monophonic tracks, last-note priority and held-note fallback |
+| Fune | Plugin ABI 1 / engine API 1.4, four independent monophonic tracks, last-note priority and held-note fallback |
 | Presets | 36 authored recipes plus real Fune files exported and round-tripped by the pinned host serializer |
 | Compiler | Authenticated legacy recovery, selected recipes and bounded real RenderRecipe import, const/XIP banks and provenance |
 | Evaluation | Windows WinMM player, portable CLI, actual-C comparative WAVs and automated numeric/acoustic tests |
@@ -62,6 +64,7 @@ python tools/build_fune.py
 python tools/install_fune.py check build/fm1/zaaggenz.kpl
 python tools/test_fune_host.py
 python tools/export_fune_presets.py
+python tools/export_fune_songs.py
 ```
 
 The vendor compiler download is pinned and hash checked. For acoustic/reference tests, install `requirements-reference.txt` and use the commands in the [qualification workflow](.github/workflows/qualify.yml). Audition material is rendered by compiled C, not a separate Python synth.
@@ -75,6 +78,8 @@ See [reference fidelity and compiler usage](docs/reference-fidelity.md), [native
 **Physical installation, DAC sound, flash-chip variation, sustained XIP/cache behavior, audio deadlines and maximum safe simultaneous native/hybrid tracks require owner hardware evaluation.** CPU cost is left unspecified in the plugin instead of fabricating a measurement. Stack estimates exclude the host caller and interrupts.
 
 The current generic Fune plugin path does not expose transport tempo or implement its older advertised glide hook. The adapter implements glide itself and provides an explicit internal RATE; match it to the song tempo. Fune retains sequencing, MIDI routing and amplitude envelopes.
+
+The [owner evaluation guide](docs/owner-evaluation.md) covers reversible installation, one- through four-track workloads and the read-only timing recorder. This instrument remains available as a draft integration for that physical evaluation.
 
 ## Provenance and licenses
 

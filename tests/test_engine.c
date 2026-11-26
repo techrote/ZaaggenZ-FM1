@@ -60,6 +60,12 @@ static void pitches_and_presets(void)
 {
     CHECK(zg_preset_count==36);CHECK(sizeof(zg_engine)<=416);
     CHECK(zg_pitch_increment(69,0,44100)>42852000u&&zg_pitch_increment(69,0,44100)<42853000u);
+    zg_engine bend;zg_engine_init(&bend,44100);zg_engine_note_on(&bend,60,100,0);
+    zg_engine_pitch_bend(&bend,200);uint32_t top=zg_pitch_increment(62,0,44100);
+    CHECK(bend.target_pitch>top-100u&&bend.target_pitch<top+100u);
+    zg_engine_pitch_bend(&bend,-200);uint32_t bottom=zg_pitch_increment(58,0,44100);
+    CHECK(bend.target_pitch>bottom-100u&&bend.target_pitch<bottom+100u);
+    zg_engine_pitch_bend(&bend,0);CHECK(bend.target_pitch==zg_pitch_increment(60,0,44100));
     for(unsigned t=0;t<4;t++)for(int n=1;n<100;n++)CHECK(zg_pitch_increment(n,t,44100)>=zg_pitch_increment(n-1,t,44100));
     uint64_t hashes[36];
     for(unsigned p=0;p<zg_preset_count;p++){

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <ctype.h>
 #include "zg/engine.h"
 
 #define AUDIO_FRAMES 512
@@ -41,12 +42,14 @@ static HWND window,preset_box,mode_box,family_box,source_box,tuning_box,roll_box
 static HWND macros[3],layers[5],bpm_slider,glide_slider,release_slider,bypass_box;
 static HFONT font,title_font;
 static HBRUSH background,control_bg;
-static int sequencer=0,seqstep=0,current_note=36,octave=0;
+static int sequencer=0,seqstep=0,seq_pending=1,current_note=36,octave=0;
 static uint32_t seqclock=0;
-static uint8_t held[128];static uint32_t key_order[128],serial;
+static uint8_t held[128],keyboard_held[128],midi_held[128],sustained[128];
+static uint32_t key_order[128],serial;
+static int sustain_pedal;
 static int16_t scope[256];
 static char status_text[256]="Ready. Play Z S X D C V G B H N J M, or start the phrase.";
-static int self_test=0;
+static int self_test=0,smoke_exit_code=0;
 
 static void note_on(unsigned note,unsigned velocity)
 {
@@ -64,7 +67,7 @@ static void note_off(unsigned note)
     else zg_engine_note_off(&engine,note);
 }
 static void stop_all(void)
-{sequencer=0;memset(held,0,sizeof held);zg_engine_all_notes_off(&engine);}
+{sequencer=0;memset(held,0,sizeof held);memset(keyboard_held,0,sizeof keyboard_held);memset(midi_held,0,sizeof midi_held);memset(sustained,0,sizeof sustained);sustain_pedal=0;zg_engine_all_notes_off(&engine);}
 static void render_audio(int16_t*out,unsigned count)
 {
     static const int8_t melody[16]={0,0,7,3,0,12,10,7,0,3,5,7,12,10,7,3};
@@ -73,12 +76,12 @@ static void render_audio(int16_t*out,unsigned count)
         unsigned n=count-offset>32?32:count-offset;
         if(sequencer){
             uint32_t duration=44100u*60u/(engine.patch.bpm*4u);
-            if(!seqclock){current_note=36+octave*12+melody[seqstep&15];zg_engine_note_on(&engine,(unsigned)current_note,seqstep%4?98:120,0);seqstep++;}
+            if(seq_pending){current_note=36+octave*12+melody[seqstep&15];zg_engine_note_on(&engine,(unsigned)current_note,seqstep%4?98:120,0);seqstep++;seq_pending=0;}
             if(seqclock>=duration*3/4&&engine.gate)zg_engine_all_notes_off(&engine);
-            seqclock+=n;if(seqclock>=duration)seqclock-=duration;
-            /* Crossing the boundary must schedule the next hit, even when the
-             * 32-sample callback does not divide the musical step exactly. */
-            if(seqclock<n)seqclock=0;
+            seqclock+=n;
+            if(seqclock>=duration){seqclock%=duration;seq_pending=1;}
+            /* Keep fractional-block remainder: tempo does not drift when the
+             * 32-sample callback does not divide a musical step exactly. */
         }
         zg_engine_render(&engine,out+offset,n);offset+=n;
     }
@@ -104,10 +107,19 @@ static void CALLBACK midi_callback(HMIDIIN handle,UINT msg,DWORD_PTR instance,DW
     if(msg!=MIM_DATA)return;
     unsigned type=(unsigned)one&0xf0u,note=((unsigned)one>>8)&127u,velocity=((unsigned)one>>16)&127u;
     EnterCriticalSection(&lock);
-    if(type==0x90&&velocity)note_on(note,velocity);
-    else if(type==0x80||type==0x90)note_off(note);
-    else if(type==0xb0&&(note==123||note==120))stop_all();
+    if(type==0x90&&velocity){midi_held[note]=1;sustained[note]=0;note_on(note,velocity);}
+    else if(type==0x80||type==0x90){midi_held[note]=0;if(sustain_pedal)sustained[note]=1;else if(!keyboard_held[note])note_off(note);}
+    else if(type==0xe0){int bend=(int)(note|(velocity<<7))-8192;zg_engine_pitch_bend(&engine,(bend*200+(bend<0?-4096:4096))/8192);}
+    else if(type==0xb0){
+        if(note==123||note==120)stop_all();
+        else if(note==1)zg_engine_set_macro(&engine,ZG_MOTION,velocity);
+        else if(note==71)zg_engine_set_macro(&engine,ZG_GRIT,velocity);
+        else if(note==74)zg_engine_set_macro(&engine,ZG_VOWEL,velocity);
+        else if(note==7)engine.patch.gain=(uint8_t)velocity;
+        else if(note==64){sustain_pedal=velocity>=64;if(!sustain_pedal)for(unsigned n=0;n<128;n++)if(sustained[n]){sustained[n]=0;if(!midi_held[n]&&!keyboard_held[n])note_off(n);}}
+    }
     LeaveCriticalSection(&lock);
+    if(type==0xb0||type==0xe0)PostMessageA(window,WM_APP+1,0,0);
 }
 static void start_audio(void)
 {
@@ -156,7 +168,12 @@ static void controls(void)
     child("STATIC","SOURCE ARCHITECTURE",0,450,88,220,20,0);mode_box=combo(450,112,180,ID_MODE);
     item(mode_box,"Native procedural");item(mode_box,"Source image");item(mode_box,"Hybrid blend");
     child("STATIC","COMPILED SOURCE",0,652,88,220,20,0);source_box=combo(652,112,240,ID_SOURCE);
-    for(unsigned i=0;i<zg_source_count;i++)item(source_box,zg_source_get_info(i)->name);
+    for(unsigned i=0;i<zg_source_count;i++){
+        const char*id=zg_source_get_info(i)->name;if(!strncmp(id,"zaag.",5))id+=5;
+        char label[80];unsigned k=0;int upper=1;
+        while(*id&&k<sizeof(label)-1){char c=*id++;if(c=='_'||c=='-'){label[k++]=' ';upper=1;}else{label[k++]=upper?(char)toupper((unsigned char)c):c;upper=0;}}
+        label[k]=0;item(source_box,label);
+    }
     child("STATIC","CHARACTER",0,26,166,190,20,0);family_box=combo(26,190,210,ID_FAMILY);
     for(unsigned i=0;i<6;i++)item(family_box,zg_family_name(i));
     const char*labels[]={"GRIT","MOTION","VOWEL"};
@@ -175,7 +192,7 @@ static void controls(void)
     child("BUTTON","Export current WAV",BS_PUSHBUTTON,354,410,180,34,ID_EXPORT);
     bypass_box=child("BUTTON","Character bypass",BS_AUTOCHECKBOX,560,416,180,22,ID_BYPASS);
     child("STATIC","MIDI INPUT",0,26,470,120,20,0);midi_box=combo(142,466,390,ID_MIDI);item(midi_box,"Computer keyboard only");
-    for(UINT i=0;i<midiInGetNumDevs();i++){MIDIINCAPSA caps;if(!midiInGetDevCapsA(i,&caps,sizeof caps))item(midi_box,caps.szPname);}
+    for(UINT i=0;i<midiInGetNumDevs();i++){MIDIINCAPSA caps;if(!midiInGetDevCapsA(i,&caps,sizeof caps)){LRESULT row=SendMessageA(midi_box,CB_ADDSTRING,0,(LPARAM)caps.szPname);if(row>=0)SendMessageA(midi_box,CB_SETITEMDATA,(WPARAM)row,i);}}
     SendMessageA(midi_box,CB_SETCURSEL,0,0);
     child("STATIC","Z row = C2   Q row = C3   [ / ] octave   Space = phrase",0,26,512,850,22,0);
     sync_controls();
@@ -184,12 +201,13 @@ static void le16(FILE*f,uint16_t n){fputc(n&255,f);fputc(n>>8,f);}
 static void le32(FILE*f,uint32_t n){le16(f,(uint16_t)n);le16(f,(uint16_t)(n>>16));}
 static int export_wav(void)
 {
-    zg_engine copy;EnterCriticalSection(&lock);copy=engine;LeaveCriticalSection(&lock);
-    zg_engine_init(&copy,44100);EnterCriticalSection(&lock);zg_engine_set_patch(&copy,&engine.patch);LeaveCriticalSection(&lock);
+    zg_engine copy;zg_patch patch;int note,bend;
+    EnterCriticalSection(&lock);patch=engine.patch;note=current_note;bend=engine.bend_cents;LeaveCriticalSection(&lock);
+    zg_engine_init(&copy,44100);zg_engine_set_patch(&copy,&patch);zg_engine_pitch_bend(&copy,bend);
     uint32_t play=3*44100,tail=(2*zg_time_ms(copy.patch.release)+1000)*44100/1000,frames=play+tail;
     FILE*f=fopen("ZaaggenZ-current.wav","wb");if(!f)return 0;
     fwrite("RIFF",1,4,f);le32(f,36+frames*2);fwrite("WAVEfmt ",1,8,f);le32(f,16);le16(f,1);le16(f,1);le32(f,44100);le32(f,88200);le16(f,2);le16(f,16);fwrite("data",1,4,f);le32(f,frames*2);
-    zg_engine_note_on(&copy,(unsigned)current_note,110,0);int16_t pcm[32];
+    zg_engine_note_on(&copy,(unsigned)note,110,0);int16_t pcm[32];
     for(uint32_t at=0;at<frames;){unsigned n=frames-at>32?32:frames-at;if(at>=play&&copy.gate)zg_engine_all_notes_off(&copy);zg_engine_render(&copy,pcm,n);for(unsigned i=0;i<n;i++)le16(f,(uint16_t)pcm[i]);at+=n;}
     int ok=fclose(f)==0;return ok;
 }
@@ -208,6 +226,40 @@ static int key_note(WPARAM key)
     if((p=strchr(low,(int)key)))return 36+octave*12+(int)(p-low);
     if((p=strchr(high,(int)key)))return 48+octave*12+(int)(p-high);
     return -1;
+}
+static int run_smoke(void)
+{
+    int ok=1;int16_t probe[512];
+    SendMessageA(preset_box,CB_SETCURSEL,6,0);
+    SendMessageA(window,WM_COMMAND,MAKELONG(ID_PRESET,CBN_SELCHANGE),(LPARAM)preset_box);
+    SendMessageA(window,WM_KEYDOWN,'Z',0);
+    EnterCriticalSection(&lock);ok=ok&&engine.note==36&&engine.gate;render_audio(probe,512);LeaveCriticalSection(&lock);
+    SendMessageA(macros[0],TBM_SETPOS,TRUE,90);
+    SendMessageA(window,WM_HSCROLL,TB_THUMBPOSITION,(LPARAM)macros[0]);
+    EnterCriticalSection(&lock);ok=ok&&engine.patch.grit==90&&engine.gate;LeaveCriticalSection(&lock);
+    SendMessageA(mode_box,CB_SETCURSEL,0,0);
+    SendMessageA(window,WM_COMMAND,MAKELONG(ID_MODE,CBN_SELCHANGE),(LPARAM)mode_box);
+    EnterCriticalSection(&lock);ok=ok&&engine.patch.mode==ZG_NATIVE;LeaveCriticalSection(&lock);
+    midi_callback(0,MIM_DATA,0,0xE0u|(127u<<8)|(127u<<16),0);
+    EnterCriticalSection(&lock);ok=ok&&engine.bend_cents==200;LeaveCriticalSection(&lock);
+    midi_callback(0,MIM_DATA,0,0xE0u|(64u<<16),0);
+    midi_callback(0,MIM_DATA,0,0xB0u|(74u<<8)|(101u<<16),0);
+    midi_callback(0,MIM_DATA,0,0xB0u|(64u<<8)|(127u<<16),0);
+    midi_callback(0,MIM_DATA,0,0x90u|(48u<<8)|(110u<<16),0);
+    midi_callback(0,MIM_DATA,0,0x80u|(48u<<8),0);
+    EnterCriticalSection(&lock);ok=ok&&engine.note==48&&engine.gate&&engine.patch.vowel==101;LeaveCriticalSection(&lock);
+    midi_callback(0,MIM_DATA,0,0xB0u|(64u<<8),0);
+    EnterCriticalSection(&lock);ok=ok&&engine.note==36&&engine.gate&&engine.bend_cents==0;LeaveCriticalSection(&lock);
+    SendMessageA(window,WM_KEYUP,'Z',0);
+    EnterCriticalSection(&lock);ok=ok&&!engine.gate;LeaveCriticalSection(&lock);
+    SendMessageA(mode_box,CB_SETCURSEL,1,0);
+    SendMessageA(window,WM_COMMAND,MAKELONG(ID_MODE,CBN_SELCHANGE),(LPARAM)mode_box);
+    EnterCriticalSection(&lock);zg_engine_note_on(&engine,36,110,0);render_audio(probe,512);sync_controls();LeaveCriticalSection(&lock);
+    UpdateWindow(window);capture_window();
+    int exported=export_wav();ok=ok&&exported;
+    FILE*f=fopen("windows-smoke.json","w");
+    if(f){fprintf(f,"{\"native_window_created\":true,\"core_rendered\":true,\"control_handlers_pass\":%s,\"keyboard_and_midi_logic_pass\":%s,\"wav_exported\":%s,\"audio_device_opened\":%s,\"hardware_qualified\":false}\n",ok?"true":"false",ok?"true":"false",exported?"true":"false",wave?"true":"false");if(fclose(f))ok=0;}else ok=0;
+    return ok;
 }
 static void paint(void)
 {
@@ -228,35 +280,36 @@ static LRESULT CALLBACK proc(HWND h,UINT msg,WPARAM w,LPARAM l)
     if(msg==WM_CREATE){window=h;controls();SetTimer(h,1,40,0);if(self_test)SetTimer(h,2,1200,0);return 0;}
     if(msg==WM_PAINT){paint();return 0;}
     if(msg==WM_ERASEBKGND)return 1;
+    if(msg==WM_APP+1){EnterCriticalSection(&lock);sync_controls();LeaveCriticalSection(&lock);return 0;}
     if(msg==WM_CTLCOLORSTATIC||msg==WM_CTLCOLORBTN){SetTextColor((HDC)w,RGB(206,217,223));SetBkColor((HDC)w,RGB(24,32,40));return (LRESULT)background;}
     if(msg==WM_HSCROLL){HWND c=(HWND)l;int v=(int)SendMessageA(c,TBM_GETPOS,0,0);EnterCriticalSection(&lock);
         for(unsigned i=0;i<3;i++)if(c==macros[i])zg_engine_set_macro(&engine,ZG_GRIT+i,(unsigned)v);
         for(unsigned i=0;i<5;i++)if(c==layers[i])engine.patch.level[i]=(uint8_t)v;
-        if(c==bpm_slider)engine.patch.bpm=(uint16_t)v;if(c==glide_slider)engine.patch.glide=(uint8_t)v;if(c==release_slider)engine.patch.release=(uint8_t)v;
+        if(c==bpm_slider){engine.patch.bpm=(uint16_t)v;seqclock=0;seq_pending=1;}if(c==glide_slider)engine.patch.glide=(uint8_t)v;if(c==release_slider)engine.patch.release=(uint8_t)v;
         LeaveCriticalSection(&lock);SetFocus(window);return 0;}
     if(msg==WM_COMMAND){unsigned id=LOWORD(w);int selected=0;
         if((id==ID_PRESET||id==ID_MODE||id==ID_FAMILY||id==ID_SOURCE||id==ID_TUNING||id==ID_ROLL||id==ID_MIDI)&&HIWORD(w)!=CBN_SELCHANGE)return 0;
-        if(id==ID_MIDI&&HIWORD(w)==CBN_SELCHANGE){if(midi){midiInStop(midi);midiInClose(midi);midi=0;}selected=(int)SendMessageA(midi_box,CB_GETCURSEL,0,0);if(selected>0){MMRESULT r=midiInOpen(&midi,(UINT)(selected-1),(DWORD_PTR)midi_callback,0,CALLBACK_FUNCTION);if(!r)midiInStart(midi);else snprintf(status_text,sizeof(status_text),"MIDI input failed (code %u)",r);}SetFocus(window);return 0;}
-        if(id==ID_EXPORT){snprintf(status_text,sizeof(status_text),"%s",export_wav()?"Saved ZaaggenZ-current.wav beside the application, with its release tail.":"Could not write WAV; choose a writable application folder.");return 0;}
+        if(id==ID_MIDI&&HIWORD(w)==CBN_SELCHANGE){if(midi){midiInStop(midi);midiInClose(midi);midi=0;}EnterCriticalSection(&lock);stop_all();LeaveCriticalSection(&lock);selected=(int)SendMessageA(midi_box,CB_GETCURSEL,0,0);if(selected>0){UINT device=(UINT)SendMessageA(midi_box,CB_GETITEMDATA,(WPARAM)selected,0);MMRESULT r=midiInOpen(&midi,device,(DWORD_PTR)midi_callback,0,CALLBACK_FUNCTION);if(!r)midiInStart(midi);else snprintf(status_text,sizeof(status_text),"MIDI input failed (code %u)",r);}SetFocus(window);return 0;}
+        if(id==ID_EXPORT){snprintf(status_text,sizeof(status_text),"%s",export_wav()?"Saved ZaaggenZ-current.wav in the current folder, with its release tail.":"Could not write WAV; choose a writable application folder.");return 0;}
         EnterCriticalSection(&lock);
         if(id==ID_PRESET&&HIWORD(w)==CBN_SELCHANGE){selected=(int)SendMessageA(preset_box,CB_GETCURSEL,0,0);zg_engine_set_preset(&engine,(unsigned)selected);sync_controls();}
-        if(id==ID_MODE&&HIWORD(w)==CBN_SELCHANGE)engine.patch.mode=(uint8_t)SendMessageA(mode_box,CB_GETCURSEL,0,0);
-        if(id==ID_FAMILY&&HIWORD(w)==CBN_SELCHANGE){zg_patch p=engine.patch;p.family=(uint8_t)SendMessageA(family_box,CB_GETCURSEL,0,0);zg_engine_set_patch(&engine,&p);}
+        if(id==ID_MODE&&HIWORD(w)==CBN_SELCHANGE){zg_patch p=engine.patch;p.mode=(uint8_t)SendMessageA(mode_box,CB_GETCURSEL,0,0);zg_engine_set_patch(&engine,&p);}
+        if(id==ID_FAMILY&&HIWORD(w)==CBN_SELCHANGE){zg_patch p=engine.patch;p.family=(uint8_t)SendMessageA(family_box,CB_GETCURSEL,0,0);p.bypass=0;zg_engine_set_patch(&engine,&p);sync_controls();}
         if(id==ID_SOURCE&&HIWORD(w)==CBN_SELCHANGE){zg_patch p=engine.patch;p.source=(uint8_t)SendMessageA(source_box,CB_GETCURSEL,0,0);zg_engine_set_patch(&engine,&p);}
         if(id==ID_TUNING&&HIWORD(w)==CBN_SELCHANGE){zg_patch p=engine.patch;p.tuning=(uint8_t)SendMessageA(tuning_box,CB_GETCURSEL,0,0);zg_engine_set_patch(&engine,&p);}
         if(id==ID_ROLL&&HIWORD(w)==CBN_SELCHANGE)engine.patch.roll=(uint8_t)SendMessageA(roll_box,CB_GETCURSEL,0,0);
-        if(id==ID_BYPASS){engine.patch.bypass=(uint8_t)(SendMessageA(bypass_box,BM_GETCHECK,0,0)==BST_CHECKED);engine.bypass_character=engine.patch.bypass;}
-        if(id==ID_PLAY){sequencer=!sequencer;seqclock=0;seqstep=0;if(!sequencer)stop_all();}
+        if(id==ID_BYPASS){zg_patch p=engine.patch;p.bypass=(uint8_t)(SendMessageA(bypass_box,BM_GETCHECK,0,0)==BST_CHECKED);zg_engine_set_patch(&engine,&p);}
+        if(id==ID_PLAY){sequencer=!sequencer;seqclock=0;seqstep=0;seq_pending=1;if(!sequencer)stop_all();}
         if(id==ID_STOP)stop_all();LeaveCriticalSection(&lock);SetFocus(window);return 0;}
     if(msg==WM_KEYDOWN){if(l&(1L<<30))return 0;EnterCriticalSection(&lock);int note=key_note(w);
-        if(note>=0&&note<=127)note_on((unsigned)note,110);
-        else if(w==VK_SPACE){sequencer=!sequencer;seqclock=0;seqstep=0;if(!sequencer)stop_all();}
+        if(note>=0&&note<=127){keyboard_held[note]=1;note_on((unsigned)note,110);}
+        else if(w==VK_SPACE){sequencer=!sequencer;seqclock=0;seqstep=0;seq_pending=1;if(!sequencer)stop_all();}
         else if(w==VK_ESCAPE)stop_all();else if(w==VK_OEM_4){stop_all();if(octave>-2)octave--;}else if(w==VK_OEM_6){stop_all();if(octave<4)octave++;}
         LeaveCriticalSection(&lock);return 0;}
-    if(msg==WM_KEYUP){int note=key_note(w);EnterCriticalSection(&lock);if(note>=0&&note<=127)note_off((unsigned)note);LeaveCriticalSection(&lock);return 0;}
-    if(msg==WM_KILLFOCUS){EnterCriticalSection(&lock);if(!sequencer){memset(held,0,sizeof held);zg_engine_all_notes_off(&engine);}LeaveCriticalSection(&lock);}
-    if(msg==WM_TIMER){if(w==1){RECT r={26,552,910,735};InvalidateRect(h,&r,FALSE);}else if(w==2){KillTimer(h,2);EnterCriticalSection(&lock);zg_engine_set_preset(&engine,6);zg_engine_note_on(&engine,36,110,0);int16_t probe[512];render_audio(probe,512);sync_controls();LeaveCriticalSection(&lock);UpdateWindow(h);capture_window();int ok=export_wav();FILE*f=fopen("windows-smoke.json","w");if(f){fprintf(f,"{\"native_window_created\":true,\"core_rendered\":true,\"wav_exported\":%s,\"audio_device_opened\":%s,\"hardware_qualified\":false}\n",ok?"true":"false",wave?"true":"false");fclose(f);}PostMessageA(h,WM_CLOSE,0,0);}return 0;}
-    if(msg==WM_DESTROY){PostQuitMessage(0);return 0;}
+    if(msg==WM_KEYUP){int note=key_note(w);EnterCriticalSection(&lock);if(note>=0&&note<=127){keyboard_held[note]=0;if(!midi_held[note]&&!sustained[note])note_off((unsigned)note);}LeaveCriticalSection(&lock);return 0;}
+    if(msg==WM_ACTIVATEAPP&&!w){EnterCriticalSection(&lock);for(unsigned n=0;n<128;n++)if(keyboard_held[n]){keyboard_held[n]=0;if(!midi_held[n]&&!sustained[n])note_off(n);}LeaveCriticalSection(&lock);}
+    if(msg==WM_TIMER){if(w==1){RECT r={26,552,910,735};InvalidateRect(h,&r,FALSE);}else if(w==2){KillTimer(h,2);smoke_exit_code=run_smoke()?0:1;PostMessageA(h,WM_CLOSE,0,0);}return 0;}
+    if(msg==WM_DESTROY){PostQuitMessage(smoke_exit_code);return 0;}
     return DefWindowProcA(h,msg,w,l);
 }
 int WINAPI WinMain(HINSTANCE instance,HINSTANCE previous,LPSTR command,int show)
@@ -269,6 +322,11 @@ int WINAPI WinMain(HINSTANCE instance,HINSTANCE previous,LPSTR command,int show)
     if(!RegisterClassA(&wc))return 1;
     HWND h=CreateWindowA(wc.lpszClassName,"ZaaggenZ-FM1 - Native Instrument Audition",WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,938,780,0,0,instance,0);
     if(!h)return 2;ShowWindow(h,show);UpdateWindow(h);start_audio();MSG m;
-    while(GetMessageA(&m,0,0,0)>0){TranslateMessage(&m);DispatchMessageA(&m);}
-    InterlockedExchange(&running,0);if(audio_thread){WaitForSingleObject(audio_thread,2000);CloseHandle(audio_thread);}if(midi){midiInStop(midi);midiInClose(midi);}if(wave){waveOutReset(wave);for(unsigned i=0;i<AUDIO_BUFFERS;i++)waveOutUnprepareHeader(wave,&headers[i],sizeof(WAVEHDR));waveOutClose(wave);}DeleteObject(font);DeleteObject(title_font);DeleteObject(background);DeleteObject(control_bg);DeleteCriticalSection(&lock);return 0;
+    while(GetMessageA(&m,0,0,0)>0){
+        if((m.message==WM_KEYDOWN||m.message==WM_KEYUP)&&(m.hwnd==h||IsChild(h,m.hwnd))){
+            if(key_note(m.wParam)>=0||m.wParam==VK_SPACE||m.wParam==VK_ESCAPE||m.wParam==VK_OEM_4||m.wParam==VK_OEM_6){SendMessageA(h,m.message,m.wParam,m.lParam);continue;}
+        }
+        TranslateMessage(&m);DispatchMessageA(&m);
+    }
+    InterlockedExchange(&running,0);if(audio_thread){WaitForSingleObject(audio_thread,2000);CloseHandle(audio_thread);}if(midi){midiInStop(midi);midiInClose(midi);}if(wave){waveOutReset(wave);for(unsigned i=0;i<AUDIO_BUFFERS;i++)waveOutUnprepareHeader(wave,&headers[i],sizeof(WAVEHDR));waveOutClose(wave);}DeleteObject(font);DeleteObject(title_font);DeleteObject(background);DeleteObject(control_bg);DeleteCriticalSection(&lock);return smoke_exit_code;
 }

@@ -63,5 +63,5 @@ if __name__=='__main__':
         args.out.parent.mkdir(parents=True,exist_ok=True);args.out.write_text(json.dumps(report,indent=2)+'\n')
     print('Acoustics PASS: six differentiated native families; maximum correlation '
           f"{report['maximum_family_correlation']:.3f}; local Bark 2x alias probe "
-          f"{report['local_shaper_alias_probe']['direct_folded_harmonic_db']:.2f} → "
+          f"{report['local_shaper_alias_probe']['direct_folded_harmonic_db']:.2f} -> "
           f"{report['local_shaper_alias_probe']['local_2x_folded_harmonic_db']:.2f} dB")

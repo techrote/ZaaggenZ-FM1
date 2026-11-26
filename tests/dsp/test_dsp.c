@@ -65,6 +65,12 @@ int main(void)
         (void)zg_native_sample(&s,&c,1234567u);
         oldphase=s.phase;zg_native_trigger(&s,1);assert(s.phase==oldphase);
         zg_native_trigger(&s,0);assert(s.phase==0);
+        /* A >27-hour held note must not wrap its age into a fresh attack. */
+        s.age=UINT32_MAX-1u;s.sweep=0;
+        zg_native_state settled=s;settled.age=UINT32_MAX;
+        for(unsigned sample=0;sample<256;sample++)
+            assert(zg_native_sample(&s,&c,1234567u)==zg_native_sample(&settled,&c,1234567u));
+        assert(s.age==UINT32_MAX);
         t.delay[1]=1234;t.form1_band=456;zg_character_trigger(&t);
         assert(t.delay[1]==1234 && t.form1_band==456);
     }

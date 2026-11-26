@@ -139,6 +139,11 @@ static void params_presets_and_additive_output(void)
         dsp->block(&tracks[0]);
         assert(zg_fune_test_engine(&tracks[0])->preset == p);
         assert(energy(0, 0) >= 0);
+        tracks[0].p[P_E0] = 6;
+        dsp->block(&tracks[0]);
+        assert(zg_fune_test_engine(&tracks[0])->patch.family == 5);
+        assert(zg_fune_test_engine(&tracks[0])->patch.bypass == 0);
+        tracks[0].p[P_E0] = 0;
     }
     m.inc = zg_pitch_increment(48, ZG_12EDO, 44100);
     m.shape = 16384;
@@ -188,12 +193,43 @@ static void held_controls_and_repeated_voice_reuse(void)
     for (i = 0; i < 6; ++i) assert(energy(0, i) == 0);
 }
 
+static void rearticulation_preserves_line_and_renews_exciter(void)
+{
+    unsigned mode, cycle;
+    for (mode = 1; mode <= 2; ++mode) {
+        zg_engine before;
+        const zg_engine *after;
+        initialize();
+        tracks[0].p[P_E0 + 5] = (int16_t)mode; /* Native, then sustained image. */
+        note(0, 0, 48);
+        for (cycle = 0; cycle < 256; ++cycle) {
+            dsp->block(&tracks[0]);
+            energy(0, 0);
+        }
+        before = *zg_fune_test_engine(&tracks[0]);
+        assert(before.exciter_envelope < 1000);
+        assert(!before.source.ended);
+        /* Same live host voice: an off/on can arrive before the next block.
+         * Keep the melodic line continuous while renewing independent attack. */
+        note(0, 0, 48);
+        after = zg_fune_test_engine(&tracks[0]);
+        assert(after->native.phase == before.native.phase);
+        assert(after->native.age == before.native.age);
+        assert(after->source.position_q16 == before.source.position_q16);
+        assert(after->rhythm_phase == before.rhythm_phase);
+        assert(after->exciter_envelope == 32767);
+        assert(after->exciter_source.position_q16 == 0);
+        assert(after->exciter_native.age == 0);
+    }
+}
+
 int main(void)
 {
     mono_ownership();
     tracks_are_independent();
     params_presets_and_additive_output();
     held_controls_and_repeated_voice_reuse();
+    rearticulation_preserves_line_and_renews_exciter();
     printf("Fune adapter: last-note/fallback/release, four-track isolation, refusal, 36 presets, additive output, stable held controls, 1000 voice reuses PASS; host state %u bytes\n", (unsigned)kreisel_plugin()->ram);
     return 0;
 }

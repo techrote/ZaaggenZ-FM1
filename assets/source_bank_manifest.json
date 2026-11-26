@@ -1,17 +1,46 @@
 {
   "audition_gain_db": -18.06179973983887,
-  "encoding": "int16 little-endian /4096; common gain restored in Q15 decoder",
+  "decode_lut_bytes": 512,
+  "decode_lut_sha256": "a3c80efe7d7889e2d1b81f5b39554557f9175ab48781ebb66ba25d0e28ec6a25",
+  "encoding": "mu-law8 sign-magnitude, mu=255; fixed 256-entry int16 LUT; common gain 8 restored in Q15 decoder",
   "format": "zg-source-bank",
-  "generated_sha256": "749cff9c8ab676a10ca84777557ec8bcfc02eb16d904eac694f657e871f1f3f5",
+  "generated_sha256": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
   "license": "LicenseRef-Owner-Provided-Unspecified",
   "locked_bloom_anchor_sha256": "25eabbe29b4ea4a2930acd700a32af141cfe72337b1b88edc7dee3476d09fe65",
+  "mip_count": 10,
+  "mip_rates_hz": [
+    44100.0,
+    29400.0,
+    22050.0,
+    11025.0,
+    5512.5,
+    2756.25,
+    1378.125,
+    689.0625,
+    344.53125,
+    172.265625
+  ],
   "output_policy": "no per-source normalization; 2ms terminal taper before resampling",
-  "pcm_flash_bytes": 185518,
+  "pcm_flash_bytes": 247849,
   "recovered_payload_sha256": "eaf5d3ab822dfa121cd3b795d62619af9e62c041fb02de19f8dbeafb0014c919",
-  "representation": "7 bounded post-topology source images, eight antialiased mips",
+  "representation": "7 bounded post-topology source images, 44.1/29.4/22.05 kHz plus seven half-rate mips",
   "sources": [
     {
+      "decoded_pcm_sha256": [
+        "a06c11646f1b4f13ef09868301ea75eedbd3069ccd4a3b74d8cb74657328d1a4",
+        "e03f024f009f277ed08f35906826135662f7d7399ea4905e0b5521f47fe2320e",
+        "c688eac368d1b5f1cc486715894d65a07fabe8313f036da04a893dce731a1ef7",
+        "e0ecbb8f63916aef23c14cf02665d9557a3cbe345f93a0a36f9ca2a3c2851cdf",
+        "168073d322152132cf03f48aa997d130475920171c8cdb22b35cd7ca89a0b389",
+        "d8fb131dc7eb578673fa7c8f49ffc3aefcf11cb2a91ace089f185e92c94a4d5a",
+        "e08d1080dcf189bfb85bb04843362f0c6b38c689a1dd770f9dd143ae2d57a4be",
+        "3b2a9692304bbf6c6ced6c2e608aa7de720af26c63678cd495c51c6dd91ac9c6",
+        "d30ffc948a9bcc0704b22d65c990eeb4930afb2836fd299bc8c409bd66d9a07f",
+        "a0ea9554af17a271cde3974b00f27845fa4af3967ab6bcf045d961eafe4fe9a8"
+      ],
       "frames": [
+        12823,
+        8549,
         6412,
         3206,
         1603,
@@ -22,22 +51,24 @@
         51
       ],
       "full_image_measurements": {
-        "correlation": 0.9996534824237275,
-        "peak_absolute_error": 0.2612452616468265,
-        "rms_reconstructed": 0.3474228034929754,
+        "correlation": 0.9999096800791621,
+        "peak_absolute_error": 0.020721101946180265,
+        "rms_reconstructed": 0.34792771718454185,
         "rms_reference": 0.3477589460485302,
-        "snr_db": 31.590840006812492
+        "snr_db": 37.42382580220672
       },
       "index": 0,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 104.76190476190476,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 0.1500826777589746,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 0.193603515625
       },
-      "loop_end": 4873,
-      "loop_start": 2051,
+      "loop_end": 9746,
+      "loop_start": 4102,
       "params": {
         "asymmetry": 0.08,
         "attack_ms": 2.5043,
@@ -85,14 +116,16 @@
         "wavefold": 0.875
       },
       "pcm_sha256": [
-        "f9ae3dd40e1698a1a3322c22cf198bff1ba416508673743794fec9693f06fc98",
-        "63378c9798cc5794003a93d84741fcf644133db9eeb17cc131c23e553001b711",
-        "423b86da227aecb31823df22a8d91858b2796280e7682dfc177bdec35f9f0697",
-        "2184cb62aa84ab3c631862c1d781b31500e2f8e84af5ac3ae8a5d1c9fc12fb69",
-        "77af7e44fd250b80ffc607bd91885e10d5a6c03f701f7345a4d59f94f9814d91",
-        "6a410683619e929474acbea2e18ab0d2fbba9a66b0695c090a28ecd4f1123e8e",
-        "2c88b5394cbe8c5fd2c507307a8bcdadec4fade5099a2d103eece9ca73a69c54",
-        "5316d5a209a7c0012c87af11bf6c528e3afb0fbfcbcfb088e080e5b614d59cfd"
+        "0d26ed3151ab44b4e04c431620d10ee3c4efa768a80799610998524897445a08",
+        "4097b64ff35b89c6197eda9009a2adbaf29d900a241e9b709cb31bcd93468cce",
+        "06eb86324bb5675ead4ddf6bc34f7270b433d7f6fdc6646c9c813e889a75cf93",
+        "16139c5ab6ea9ef34563a514347d8ba8532b32146ed80d5a91269a45c86f7f73",
+        "6b1e2cfe401d832be4e980e004034e511ae1f05490df08ea93d86d4a829afe08",
+        "5288b263676c097432712759b5502567e168ec8b965890d10459e89862fb2f59",
+        "5479e92661544b0ab7cdf2b598a377bc276756d716ba4d6c9fa0ca00ebacca8f",
+        "790e9f778f7dfce9418cd157581f55ced0e258f1a604fd241b860acac0c21571",
+        "a7043e63be1b7c783e4c41a80d6281c9b7db8006ba4e93091d3abc4b7bc6fdce",
+        "38c352fdc61318a72449c72e1f4c494d8e90a36e557ebcf2464764862b3aa93c"
       ],
       "pcm_shift": 3,
       "peak": 0.9399999976158142,
@@ -102,13 +135,13 @@
       },
       "reference_path": "locked_bloom-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": -0.6831252576680226,
-        "peak_absolute_error": 1.7779152472918314,
-        "rms_reconstructed": 0.3503378294805586,
+        "correlation": -0.6790816885391244,
+        "peak_absolute_error": 1.5919442146397564,
+        "rms_reconstructed": 0.35086324811495,
         "rms_reference": 0.3477589460485302,
-        "snr_db": -5.303474428000926
+        "snr_db": -5.299570539259157
       },
       "source_duration_ms": 290.75,
       "source_id": "locked_bloom",
@@ -117,7 +150,21 @@
       "source_samples": 13956
     },
     {
+      "decoded_pcm_sha256": [
+        "48d804a0844c41f23c416ad19ae833dbaca450fc5c2c393bbd1def66f2dc600b",
+        "e0b74410b5b53abb9b754138caa6a136cd60b572fc1ff47ad91481f6f732dcbc",
+        "5ad3eb0cdf843193b6d7ea4af9a3897d3faf70e491d3e261436ee72ac486c33c",
+        "378915a6e48e75ab1f0ca8a53a7bf2fcff1099b299b53e92b51b7655d6286c00",
+        "d04dd996f8fdf12929f025598fe59594a483e6ed1620fc24694b1f95cf2ef6db",
+        "3da5f95e6b35dbfcec5da4bd7ecf60c35272a0f3b55365ff0f7f68929caedaba",
+        "d00f554802039c847b2c58bc804b045f8e8f4ca6ab6306c4a45507ba09271b37",
+        "9b67c8afcc215d810da8f92ed1d92822e7fe19e67f2706cabceab551ebe48c62",
+        "1c6fa2f9019cc421b7719ec9f9fc744e074af50e0dbc68006028a2e2cb3b08ee",
+        "f5819d3b9f1699c4f60e737450bd01042240f3a34700f69aec6ad7c263146444"
+      ],
       "frames": [
+        13370,
+        8914,
         6685,
         3343,
         1672,
@@ -128,22 +175,24 @@
         53
       ],
       "full_image_measurements": {
-        "correlation": 0.9826417920318554,
-        "peak_absolute_error": 1.9886513828015704,
-        "rms_reconstructed": 1.4881171393313468,
+        "correlation": 0.9999136309441287,
+        "peak_absolute_error": 0.07213781397818897,
+        "rms_reconstructed": 1.554660147089746,
         "rms_reference": 1.554926441095029,
-        "snr_db": 14.723156208814208
+        "snr_db": 37.81124452641078
       },
       "index": 1,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 104.58049886621315,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 1.8663662665414815,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 0.653564453125
       },
-      "loop_end": 4957,
-      "loop_start": 2139,
+      "loop_end": 9914,
+      "loop_start": 4278,
       "params": {
         "asymmetry": 0.2,
         "attack_ms": 4.8,
@@ -191,14 +240,16 @@
         "wavefold": 0.96
       },
       "pcm_sha256": [
-        "e65cd2c1a378664de15b1033836db9b4bf41888ddce0edeee575e292eb8ea399",
-        "1b554d516f2bb6ecb0333aae7084b018f1280146161230cb34234ca64c5cbe54",
-        "8a053440bb7c6c819e6503f4098fd7abedec55f9215c2004ed436ed9b6a44ce0",
-        "7c7bcc6b66bf82d867ac235bb7547f5a11eeeb44e620c5cfa14eb0a0b1702f76",
-        "050a96f9398d010d0067a38e602cd524c01ba9677e0aba453b9d8f460cba27cb",
-        "ca164689b3ff7adb1a4ad2071ead9bb219d397fc88a3671f68881604e0fc8f19",
-        "da0e9dad51c1029486665b6d15bf45550e1005b44673b1d639e9da21f8f99740",
-        "2104ac8bcfdc3e9e0e05fe93bb48ea45dcd744028f4c2a7b17c761445571dc3c"
+        "994906bb0467458b4a8b3ec536f637a1d7cc91b73b599e07136c7e7b93460027",
+        "6d737a24f2eb328d062eb60d878443504f3a8cd7a535e8a2dad9c6d775af7d78",
+        "5b5de67751bc869c66a7a574f3c285f0bbe5c9ecc779a9a568c01f47b8f6b8fd",
+        "e8b91e464c12478873971dc537d2e18c8c35c409ebc38c67ed82b70fd4643ac1",
+        "39bc7303c0198649872543bbda3b71f432343e7b3c5c11786dbedf65f18b5246",
+        "b0bac7bab4960b2ae6d757103eca17857700447f8f351390df5c25f12dc52160",
+        "23deff72fc4f1f2cbce35aafd87698f9869c902c1f5c151275964a1fffb61699",
+        "3abaf9b8e922644b9e95c03c43ff2a26ff301e232ca899b166fad5ca9e934815",
+        "807b2ca92e174dd7ca7af09215a26c59e1b38adb54cdb5a158b48b7fe9e8e978",
+        "9d2321bc7e6ff345d5ec664b08e69968588d3503a10a7a5f92f69a14abf16059"
       ],
       "pcm_shift": 3,
       "peak": 3.5483028888702393,
@@ -241,13 +292,13 @@
       },
       "reference_path": "zaag_bloom-bark-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": -0.04182808097753921,
-        "peak_absolute_error": 5.274289471145861,
-        "rms_reconstructed": 1.5825503839222146,
+        "correlation": -0.02365355802967325,
+        "peak_absolute_error": 5.238515036834141,
+        "rms_reconstructed": 1.652816324887501,
         "rms_reference": 1.554926441095029,
-        "snr_db": -3.05491234368219
+        "snr_db": -3.1843369824336842
       },
       "source_duration_ms": 303.1666666666667,
       "source_id": "zaag.bloom-bark",
@@ -256,7 +307,21 @@
       "source_samples": 14552
     },
     {
+      "decoded_pcm_sha256": [
+        "ca75dc8dbdb9f454504075fecced16cdec1becb3c8c5576b0f45335b7644e28b",
+        "c1d760fddc9e1e87b98e1aae718a9bfde04b512d76f701820ecc76d2d3b6f2b0",
+        "e4b331942db5dcacb3946225d636e755b3c4c5332575810499f5b4e2db6dab00",
+        "79d2868b93c70972374fde5bbf1aae7fa5bc11830b6e19a90d1a8de3f6fd54e4",
+        "a7c5462de8cf86b9b2f2a025a0f9b342fde39319e2c1c8641083b4a3f013cbd2",
+        "d67c372ff8f0b639e599455f9ae56decf08aba375962cc078cf415813ca769a8",
+        "3ec6b9eb283f5aab6682adce066a77837e5960a27e623bcd3bc3635808ea63ca",
+        "9c5908478a8084c38edbb18dd3b99abae3bc741c7b3ec89f53d80d45f7372e18",
+        "b098983a33366c6df491bc4d0a3614686b63c0bde902575984228ecbfb14ea87",
+        "f44f9ff0783b6629be0133dd317aee8a19cea082704d1ab83f127b3cc6891e5b"
+      ],
       "frames": [
+        13370,
+        8914,
         6685,
         3343,
         1672,
@@ -267,22 +332,24 @@
         53
       ],
       "full_image_measurements": {
-        "correlation": 0.9830369748767092,
-        "peak_absolute_error": 1.4420036043749336,
-        "rms_reconstructed": 1.1020707167394994,
+        "correlation": 0.9999133217856748,
+        "peak_absolute_error": 0.04572811500765628,
+        "rms_reconstructed": 1.1567779054856728,
         "rms_reference": 1.1564582343050223,
-        "snr_db": 14.669499149736989
+        "snr_db": 37.66538595795962
       },
       "index": 2,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 104.98866213151928,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 1.3519721902094333,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 0.35205078125
       },
-      "loop_end": 4966,
-      "loop_start": 2139,
+      "loop_end": 9932,
+      "loop_start": 4278,
       "params": {
         "asymmetry": 0.12,
         "attack_ms": 0.65,
@@ -330,14 +397,16 @@
         "wavefold": 0.84
       },
       "pcm_sha256": [
-        "98d67325f00ba7567c619c07b3b58fb1e2dad113670811ee91360f6e26f91c78",
-        "7e655a5ce26a2e3feef4467da22ce6b473aed9887dcf4e91ae93bcd98e23d3f2",
-        "943761a8e34f21409d88bbde1f77a6d6f3aed522bdfc51222fab7fe61a84dcb5",
-        "9b57abaec3f2141548412063841e38fda6050af1783835b8b3fd5a926ffdfc68",
-        "b268dd184d1896d5f75f3d354e2b7dd056f45216df211166a8ecb6ff71004ccf",
-        "0a197d70fdeb811b7af0c89b240e0a1d0cac29c71113d74044dbfd8db696bd25",
-        "a59914c4636b5319eb4a49a58e3a9bce90c6a8b2f56be4d76fcc2e8974d42c03",
-        "9a674a8090acdbdf70dd6eb11d3b80ce7006f33a2dd51ad25cfaefae6d7a2b6a"
+        "a733b829b5184a0ff56637847ee58835db9030cd591a51d40c2b795d019657cd",
+        "4a14c691ae4fbca1b242f3b7224bcf6dbb87c35ac11d6f32f7ad7099fc0ff9e9",
+        "e67cdb43c1146008f4de127e636fb02b8fa1de8f082af2e7dad3414a6f81c4d2",
+        "4ca431264e7c71fc267e201ee2c9c514173e41ff8d6e86f5807d379f818aa647",
+        "442c81184aa6fd59352c8d3898dc1fa79271ea292de07b2776c218bf26ee7e29",
+        "74ab8596fa7bf47700a42a508f820ea6eacd3374d2f8d0a5010b0e4c66b365d9",
+        "32b40c14950b0eaa8d4e044a599a4953756b7ba1a2201632fbcdf4a6573677e4",
+        "14f44d6e030c18080550fe6a6476ea1946c80ce16e100950b85c296fe1db0149",
+        "b6d40026abcc32069c6c04bf4bff10b0f663a33bc674bf0301c71808c8aec166",
+        "f2b4931b7a6763364f96b991fd02a6b49262719dff405f58f98e244b7a122475"
       ],
       "pcm_shift": 3,
       "peak": 2.0758533477783203,
@@ -383,13 +452,13 @@
       },
       "reference_path": "zaag_formant-snarl-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": -0.06951661232246714,
-        "peak_absolute_error": 3.654901156409534,
-        "rms_reconstructed": 1.1098889320801992,
+        "correlation": -0.06488162807979704,
+        "peak_absolute_error": 3.780710873435705,
+        "rms_reconstructed": 1.1570679279978442,
         "rms_reference": 1.1564582343050223,
-        "snr_db": -3.059440285306487
+        "snr_db": -3.2201972828494867
       },
       "source_duration_ms": 303.1666666666667,
       "source_id": "zaag.formant-snarl",
@@ -398,7 +467,21 @@
       "source_samples": 14552
     },
     {
+      "decoded_pcm_sha256": [
+        "8e2d0c74aceac05a70fa9ed06e87ff748ee1da84b6769ad64b8eeb12e96a367f",
+        "7d9adb33cc3f769cd0104e1d4cb4223759bf214929e01dc83aac544311cfa373",
+        "e7daf33acc8fe44597cf2f819ab8bed8e395792bbba20211f885984993ab0d63",
+        "bd713bca1f422bc67b8b05858631a3da3fa75bc3c0a2431030238c17e344c8c8",
+        "667300daab48bd19484c2267292c3588c8374ec23dd70426f1d6853abba4d6ed",
+        "a49a8ded66e609ed58edf2577ab2fd3474ba9857ea724f2ac8f9beabb338d8b9",
+        "010711ac583629b01f47409137893c286a77093344ed8f01ccb606de285fb526",
+        "844487e39717b7601f4a2f9ad03eea1b2ecfa853006fa0373c5f30e5d9e0bb69",
+        "709b756b78dcde43419079a38f50c3720eac2233644eb1257b9667439a11bab2",
+        "8ac4314ebae1c9f43668833e47a0c2ec96014f3fc3bd3f954a6e3a33c27f3631"
+      ],
       "frames": [
+        13370,
+        8914,
         6685,
         3343,
         1672,
@@ -409,22 +492,24 @@
         53
       ],
       "full_image_measurements": {
-        "correlation": 0.9876597365283751,
-        "peak_absolute_error": 1.3960806814758624,
-        "rms_reconstructed": 0.9123489090179386,
+        "correlation": 0.999916114395268,
+        "peak_absolute_error": 0.044622659545975774,
+        "rms_reconstructed": 0.9428281845089085,
         "rms_reference": 0.9429583105349121,
-        "snr_db": 16.036649427909712
+        "snr_db": 37.75758688275399
       },
       "index": 3,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 125.578231292517,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 0.6604864753631112,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 0.202392578125
       },
-      "loop_end": 5420,
-      "loop_start": 2139,
+      "loop_end": 10840,
+      "loop_start": 4278,
       "params": {
         "asymmetry": 0.12,
         "attack_ms": 0.65,
@@ -472,14 +557,16 @@
         "wavefold": 0.9
       },
       "pcm_sha256": [
-        "9b4d05c819a12a7acf9b704d250697d2d047bbd432345b61522b0fe24d6392d2",
-        "fd169d51db8968e141d72db3cd1ff0adb71442c77fc0590738cf0ca12a9cc0bf",
-        "1a034a1c1c896ffebd525aa244e7631f19e2f2b00f36dae13d6e479f225d93eb",
-        "d80afc502e59be37580f9793f29d178312a67ea62eef48fc302b3766a75ce535",
-        "8f289d14741e584259d8e996b2400978440b1ae0d80fe3e8daa9fcef6370a393",
-        "511397a38b0270bf16eacba5904d0eb199226ffe5beb194a35fc6a8d1f3cd481",
-        "967e535c4944fc5a45fadd8f9ecc27ee67ea6d4be1b9c84de9a00becea207566",
-        "c1a3313a425c1d5ae38ab450d9cfad4046dba42b2eeb7a99ed213efc5032ddc6"
+        "9e851761732d021379b7b2d7f691c2b5253ce3ff469abcdc532a9f8b9738220c",
+        "e945b3d0c29ba399a18207062ef80e948e3032e0a7447e9e597ccd90a672f66d",
+        "3f55509ebb8398f56822b2ae73180f13c34c5ed07b78afc4f011d42eb1acd456",
+        "d2d52e709eb0e028c5fa50e164da54be48187648f9bc84de3382bb28e5b73ae2",
+        "dd74ad7057d411f1e31b6171292a63b0ef699af6740aa040dda210239c348fb2",
+        "9b6028bbb25843dc046e01a51de32e665ccea494ee5c8bb5a14b6a8ba141b69f",
+        "1d58673b01584e6c837eeb8cf0e259813e60aa544da854eabccfb48d15067e9f",
+        "cdc2e1e51fa63d0cf8703e7db0f6b299fe7974978543b122af246ab57fdfe9dc",
+        "055a52b4b2cdb0109545e9c76bbf9c4f50a7a6038e5ced67d44482968fef28b9",
+        "17314cc96eb4ba05f8df99ead0e38e7ed11413ac02f1461121ab1cfa4074b835"
       ],
       "pcm_shift": 3,
       "peak": 2.259584903717041,
@@ -522,13 +609,13 @@
       },
       "reference_path": "zaag_upper-chop-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": -0.17126994246376873,
-        "peak_absolute_error": 3.5784242154540244,
-        "rms_reconstructed": 0.6829753663348389,
+        "correlation": -0.18388820270845793,
+        "peak_absolute_error": 3.6974507553198857,
+        "rms_reconstructed": 0.687828025414357,
         "rms_reference": 0.9429583105349121,
-        "snr_db": -2.4934984696169398
+        "snr_db": -2.5604873268770123
       },
       "source_duration_ms": 303.1666666666667,
       "source_id": "zaag.upper-chop",
@@ -537,7 +624,21 @@
       "source_samples": 14552
     },
     {
+      "decoded_pcm_sha256": [
+        "c2a34f10cefae2e275052c92f303d15633fe20e36dfd0a8bc069d196cb27dc58",
+        "01f8652b0c94aba31df5c60b23bb188547744d0755abf7b7c39fafc788156e95",
+        "639da3a80b34423658a3381c62be7ddfd7a9a24b7095f3c21e2e6c65772e6ef4",
+        "a1cb2d5ea6ddff06a8c70aaa01ae660a8c9f6ec10ebb1c9eb4e1386c4bd12a55",
+        "cd504d167fcaed25ae971a58f4c249995e09bbd417c06c2b011e56cbe8fc202d",
+        "2d1b538788a99d647207086d0252916d47f8b645655a8824e848b197d02398a9",
+        "36cd75e2402e24b4254ba203ecdf1e5580b740180e1de37aad15b7f9cc90141e",
+        "3bedd42bf99bc434c2ec2ccef0034c3c0dfd24fa4cf9c88e61af491c1a9e4859",
+        "716737cbe94a88504530394aa8d0ef3ab23bdab1bd24d799e474bcd58e464a78",
+        "37690ac06378f1fbc91a0b0f254d50f2064c3ffb788c56f1e6c6561d6b4c86cd"
+      ],
       "frames": [
+        13370,
+        8914,
         6685,
         3343,
         1672,
@@ -548,22 +649,24 @@
         53
       ],
       "full_image_measurements": {
-        "correlation": 0.9975650632516979,
-        "peak_absolute_error": 1.456144361828224,
-        "rms_reconstructed": 1.3329910046468976,
+        "correlation": 0.9999177545557297,
+        "peak_absolute_error": 0.05483496828446688,
+        "rms_reconstructed": 1.3438706786677235,
         "rms_reference": 1.343788734720177,
-        "snr_db": 23.117333925770026
+        "snr_db": 37.85362236178449
       },
       "index": 4,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 134.69387755102042,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 1.6278540379013138,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 0.092041015625
       },
-      "loop_end": 5621,
-      "loop_start": 2139,
+      "loop_end": 11242,
+      "loop_start": 4278,
       "params": {
         "asymmetry": 0.12,
         "attack_ms": 0.65,
@@ -611,14 +714,16 @@
         "wavefold": 0.82
       },
       "pcm_sha256": [
-        "b1651a9a6fa164b52c539ed43f2075f6f73c487547fd1e27db4764269bae0f5e",
-        "63f1eeed04d6a9faff71ef2110a951f71946d7bbac8e64b1f786f4df7f5772a2",
-        "13e48fc26b5327615314a46f0313b76f976315e1cc68d7fd097f174bf36ecea7",
-        "c877b9830ab2bfe7f9398c8e22d19ac99573f21e3410723ad48b3e0b316059ac",
-        "7409e17666a7e6108dd677801afafb7047fdf336935cb14dfedfa94076bf2f68",
-        "a728d5311a82dffecaca3408e62499c778fd53707a98c039443188df0aa23147",
-        "c234f1d2219b2315628ac4ed91750d638fe4b56c9d55fba3529f640ff688f19e",
-        "22917837ee1723caebea8c2dffbce6d5288b5050c795e1f577ef250a0a8babfb"
+        "e92656167e4a05a4a3da149470978bf0090d98d8354e50af4ef392430e952e85",
+        "a0e216ef08e42688dee771bd4eed87757aeb1911a7ae69a81bb10d09ae3c91da",
+        "d556d06584c6cf9d7755fcb70d2004b3668cb159ce7a21782083b242b170266c",
+        "35cbedb542dfd5502bbbd9b85b4273bae1aca5077c7d519d54807141a6a5ced0",
+        "02f76097dc38f330f8764e922209bfac0c1390339dac65a532a0ca72126839fd",
+        "cf3a822872e934ce974d24a022493874eccde4f50ddf22b9a34797c06dfdd99e",
+        "01a5d879aaf49044ac3a550f73c5d2eddce508e4e3076b003ccd79296ea32e7e",
+        "5116a1d844e5e1c88049aa2ea4a1af2cb5653dbef9345e169c472d70a8e998b2",
+        "9fd152cbeee9573e88d1f91c6777ea75182769b46a6615dae14cf938a8d44d0f",
+        "f53fa166e928cf47f1a25187cd46abd039d68a2fda01be67b147d300405a5e15"
       ],
       "pcm_shift": 3,
       "peak": 2.9437246322631836,
@@ -661,13 +766,13 @@
       },
       "reference_path": "zaag_split-maul-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": -0.01127062734811561,
-        "peak_absolute_error": 5.173744378342054,
-        "rms_reconstructed": 1.4400181675722297,
+        "correlation": -0.014449463453497824,
+        "peak_absolute_error": 4.852501803873466,
+        "rms_reconstructed": 1.4721810355531877,
         "rms_reference": 1.343788734720177,
-        "snr_db": -3.3875604945802213
+        "snr_db": -3.504082237056181
       },
       "source_duration_ms": 303.1666666666667,
       "source_id": "zaag.split-maul",
@@ -676,7 +781,21 @@
       "source_samples": 14552
     },
     {
+      "decoded_pcm_sha256": [
+        "242829b9b7e0a3202e1548656c5bb6b2ebaed7bba53d0b9418c634c28193751e",
+        "994222265d11413f81365a06bdd10e96ac980d603342e3ef01c60fafc47b5d49",
+        "c8a28819131721eeb41b4a69f048ca97c026d777101f0af6f6659cf1daf89cf6",
+        "3c789b80af220ff1e11fb77741bddad9e2736b83644a6b0e27b5f66ea8f1a53a",
+        "cffdafe8f50530635000d7e4cfc09288b25e91b282b7cc115a43ba6ce698644b",
+        "98ebb78a5c64a162c18926fb323c95874f9731bcc83cde5dda07f8ca757e5656",
+        "fb3be758541b44a07c4c9d76b414672417a9f9776de4b51d1a0a0dedf07bb237",
+        "ca26a9e0ab92dea2769960dfad4a7c5facb524e752630724bc965157b4ff2906",
+        "b59963afb398062cc78964c7a1af09bb5e1a2d927622c4545e6887ae5fb006e4",
+        "a1b884b3099f7a6c8ca80b89cab67728938fc41513329697ee662efa04bf8fa4"
+      ],
       "frames": [
+        13370,
+        8914,
         6685,
         3343,
         1672,
@@ -687,22 +806,24 @@
         53
       ],
       "full_image_measurements": {
-        "correlation": 0.9755177515052118,
-        "peak_absolute_error": 0.846630610420716,
-        "rms_reconstructed": 0.9443512975489897,
+        "correlation": 0.9999155416682609,
+        "peak_absolute_error": 0.030380192961393604,
+        "rms_reconstructed": 0.9943962423269715,
         "rms_reference": 0.9952428706715873,
-        "snr_db": 13.101013205055374
+        "snr_db": 37.706881345776274
       },
       "index": 5,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 104.80725623582767,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 1.1502687858950513,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 0.08447265625
       },
-      "loop_end": 4962,
-      "loop_start": 2139,
+      "loop_end": 9924,
+      "loop_start": 4278,
       "params": {
         "asymmetry": 0.24,
         "attack_ms": 0.65,
@@ -750,14 +871,16 @@
         "wavefold": 1.0
       },
       "pcm_sha256": [
-        "f2cbfcc8cdcdf0c31d1c1c9322d5f3cce6b4ecdd7f2bbb31ebcf590eea985217",
-        "768bd4a1d3c09b4c432228b7b66f91074deb49d8f92b730b0a2440aa99b00554",
-        "c8fb411248e443616bb72f7835f9fb9673ae0a1d9dbf2e0121b791c054fc22b2",
-        "cf2d9178bd1b8f35e5da6afdd67c2f86aa9f1cb08afaac0c5f37958d0f685955",
-        "13ffc1044bb21217ac9d22690718a5a03599b5bbbe2b11d0b7baeb416c2000c6",
-        "8e4b76d2ab1514565c9eef218f06cc723dea866dee6f6926e37d48befc0adb0a",
-        "88a427c157fe6a6be576aee84642d26fae7b5d23fd34eed3cb61793ca640351f",
-        "9060ef3bfded1e33a06abdc1668c1e20459d1970be54f68b74a840413d02f570"
+        "0391eab67207acad5df22dbe7a20f0fd1f6fbaf7fadfbeef4eec98883cf1cefc",
+        "2bc96d39de97aa255e0c93e0f34c98bf8fd689bc88e6a3e645876b93a36489c6",
+        "80348213148481579771e99cf621f1ccef2f762cfc0bca22acfe85a2bad65e49",
+        "6912acd1fe030c20f90c5a00247bc672069cb6ed6253f7a4fb447268df1c84d7",
+        "2e8037be4af4e0ed97e1bd2c564bf956c68a6d7faa8f8ec717456cfd23abec7a",
+        "837224ccd3fd989ffd00e81ed92eb77307ad97ecb6ee6b90a6d4e8f2d4433181",
+        "417829e0c54cc2aba95facc36093f86146a0cc2a89435e5b43817436dada0d0a",
+        "989a9ac8df015cf2fa78fb720350b9e66e2522e3a2db08e5a905889551e7d9ff",
+        "c7f34176d591df45092395db175af35a0fbc9fa86b37d46becbb6026d28b188c",
+        "ed9c177f5047c166b445fdb2f397e04f087036edec4313262a27bf450a64add6"
       ],
       "pcm_shift": 3,
       "peak": 1.2898337841033936,
@@ -800,13 +923,13 @@
       },
       "reference_path": "zaag_crushed-teeth-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": -0.05028695186264497,
-        "peak_absolute_error": 2.6949758780055246,
-        "rms_reconstructed": 0.9546502676347332,
+        "correlation": -0.030235887342805048,
+        "peak_absolute_error": 2.7492118779412813,
+        "rms_reconstructed": 1.0056887620963995,
         "rms_reference": 0.9952428706715873,
-        "snr_db": -3.040931297106402
+        "snr_db": -3.179725655004761
       },
       "source_duration_ms": 303.1666666666667,
       "source_id": "zaag.crushed-teeth",
@@ -815,7 +938,21 @@
       "source_samples": 14552
     },
     {
+      "decoded_pcm_sha256": [
+        "8dc30ff247743cd00c7c244ab59a2a212e2d9990f5d7dbbdfbb9ea2252c52b8b",
+        "870f40815ef72d1f6a09b0fa9eb1419b58d781b6eeb98ea6ea4ac767d8077389",
+        "924df9ff96c2dfc301e93ac7c1275591adf24378ac522740820b59939e29b60d",
+        "bc9a00d2090e132d2d37bcd473b0b539af644eda6ef7e3ba2e2d438a23973d71",
+        "175e27fbdca9fd52a9073f26d5dc4c64c3bc6a26249cc69f82c7392a3617ee1f",
+        "d0ac0f890a5d58303549517d9656f2ca87799dbb153555768a3bb135718dcbc4",
+        "4b7a7dde53d879db539599c7419e09bc2301ebbef9f689dfea7d904690c42289",
+        "3f5e8626215b02fa2ab65aee539c3c6bea4e681f8dfefa87237596f393ce7e90",
+        "76301f16957df8da38e166ae8208c331204ed7d8bd1bbb4e6903b1d088d05581",
+        "22b76da35735aa34f06ff8a31bc660f8701351e8a1c2d051a03a0327f17d93e0"
+      ],
       "frames": [
+        13370,
+        8914,
         6685,
         3343,
         1672,
@@ -826,22 +963,24 @@
         53
       ],
       "full_image_measurements": {
-        "correlation": 0.9737782578675408,
-        "peak_absolute_error": 2.0809719645888163,
-        "rms_reconstructed": 1.2053544083887644,
+        "correlation": 0.9999164471366506,
+        "peak_absolute_error": 0.04943766845688691,
+        "rms_reconstructed": 1.2826183838399572,
         "rms_reference": 1.282334219374748,
-        "snr_db": 12.766498204767792
+        "snr_db": 37.76889655613882
       },
       "index": 6,
       "loop": {
+        "bank_overlap_samples": 1024,
         "loop_period_ms": 124.76190476190476,
+        "matching_rate_hz": 22050,
         "overlap_rms_error": 1.588418857826637,
         "overlap_samples": 512,
         "policy": "matched-segment-linear-overlap; release-finishes-current-overlap",
         "raw_boundary_jump": 1.8466796875
       },
-      "loop_end": 5402,
-      "loop_start": 2139,
+      "loop_end": 10804,
+      "loop_start": 4278,
       "params": {
         "asymmetry": 0.12,
         "attack_ms": 0.65,
@@ -889,14 +1028,16 @@
         "wavefold": 0.94
       },
       "pcm_sha256": [
-        "6d98285779ea2cc50d7bf3662e9231c65739172923e8d55bad427df6ce3668d7",
-        "d5ea7807b0dff3d5025683b933ece322f2b9320c88ea42da93b7699743ad9468",
-        "77dad31a06e5f4eb46193fe5b5e294927aa09f9b7165d097b4229689b607944e",
-        "e1ae2491db21caabd887ea6fdb2b22bc698a04ff52f39f2218cfe79ab37639a2",
-        "6d7cfd91965a063fe78ec54702602e5fe6a25d80fa6d6e20ae694dfd9bd7ade2",
-        "60eb238fbd616bf6ca8fddd44c623c6affadeeb7028e3adf62e8c75298050484",
-        "d0026ee4a234d143403bc524c527456b210ba6b3eca82ba29691bc3573daaa13",
-        "a6a6f38f724f5a78e34619acf91b02c4f94f99791303512201a2168b6e01a9bd"
+        "c8aea88666e1dbba321bffa43e301512b6844d75a2ad947a755707ec56976e0d",
+        "41d00125e912800ea7812350449a272ef83403009acc249c7e4c634b847ea360",
+        "8464d404b7c742a532e2113ea797b620a9edf5e44611298d7e67e520bac12958",
+        "b24e5075836549f1b014eb57708ebce822b0074d63bf8f66f5874a6b0d9b018d",
+        "d8f798f59719627d5b464408e56610b0dc3b966138a2be5736d50b3a6867e895",
+        "65900183ca03c535ab856ea1507b162b74e48285f7297ba5059164dec69d15e6",
+        "d8374583bff7b6d4776af8191a5d3545e8d90549c402fd9dc99d34e90f8f983e",
+        "9c7871d33841dab606413c7848e16b19859daa9ac02da6b90fa1638706e1257a",
+        "55287766d4aa54d3e513fa1824939e65d1ed0c5034b0385d035755f96f9200e6",
+        "57f59678170455ac832a4bf829295ac9130ccc054c0ce4e1215316f3eea8ff10"
       ],
       "pcm_shift": 3,
       "peak": 2.358994722366333,
@@ -942,13 +1083,13 @@
       },
       "reference_path": "zaag_harmonic-rip-reference.wav",
       "root_hz": 48,
-      "sample_rate": 22050,
+      "sample_rate": 44100,
       "single_cycle_measurements": {
-        "correlation": 0.008440917701718386,
-        "peak_absolute_error": 4.24606489830343,
-        "rms_reconstructed": 1.2607794513112949,
+        "correlation": 0.0021176438464537953,
+        "peak_absolute_error": 4.426146652831887,
+        "rms_reconstructed": 1.3407291773875027,
         "rms_reference": 1.282334219374748,
-        "snr_db": -2.902286448611868
+        "snr_db": -3.2003772324476603
       },
       "source_duration_ms": 303.1666666666667,
       "source_id": "zaag.harmonic-rip",
@@ -963,8 +1104,9 @@
     "python": "3.12.14",
     "scipy": "1.17.0"
   },
+  "total_asset_flash_bytes": 248361,
   "transposition": "source-derived varispeed; pitch changes source duration",
   "upstream_commit": "d7e580c190d00e1d00a573a6b845c75ddddc1d4c",
   "upstream_repository": "https://github.com/techrote/zaaggenz",
-  "version": 1
+  "version": 2
 }

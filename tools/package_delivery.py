@@ -23,6 +23,8 @@ def main():
     p.add_argument('--songs', type=Path)
     args = p.parse_args()
     revision = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    source_tree_clean = not subprocess.check_output(
+        ['git','status','--porcelain','--untracked-files=normal'],cwd=ROOT,text=True).strip()
     name = f'ZaaggenZ-FM1-{args.kind}-{revision[:8]}'
     dest = args.out / name
     if dest.exists(): shutil.rmtree(dest)
@@ -37,7 +39,7 @@ def main():
         shutil.copytree(ROOT/'third_party/fune/src',dest/'third_party/fune/src')
         shutil.copy2(ROOT/'third_party/fune/UPSTREAM.json',dest/'third_party/fune/UPSTREAM.json')
         (dest/'tools').mkdir()
-        for n in ['install_fune.py','fune_slots.py']:
+        for n in ['install_fune.py','fune_slots.py','fune_transport.py','observe_fm1.py']:
             shutil.copy2(ROOT/'tools'/n,dest/'tools'/n)
     else:
         executable='zaag-render.exe' if args.kind=='windows' else 'zaag-render'
@@ -49,8 +51,8 @@ def main():
             player=next((f for f in [args.build/'ZaaggenZ-Audition.exe',args.build/'Release/ZaaggenZ-Audition.exe'] if f.exists()),None)
             if player is None: raise SystemExit('Missing actual Windows native audition executable')
             shutil.copy2(player,dest/player.name)
-            (dest/'Start-Audition.cmd').write_text('@echo off\r\ncd /d "%~dp0"\r\nstart "" "ZaaggenZ-Audition.exe"\r\n')
-            (dest/'Render-Example.cmd').write_text('@echo off\r\ncd /d "%~dp0"\r\nzaag-render.exe --preset 0 --pattern riff --seconds 8 --out Elastic-Bloom.wav\r\npause\r\n')
+            (dest/'Start-Audition.cmd').write_bytes(b'@echo off\r\ncd /d "%~dp0"\r\nstart "" "ZaaggenZ-Audition.exe"\r\n')
+            (dest/'Render-Example.cmd').write_bytes(b'@echo off\r\ncd /d "%~dp0"\r\nzaag-render.exe --preset 0 --pattern riff --seconds 8 --out Elastic-Bloom.wav\r\npause\r\n')
     for src,sub in [(args.audio,'auditions'),(args.comparison,'architecture-comparison'),(args.presets,'fune-presets'),(args.songs,'fune-songs')]:
         if src:
             if not src.is_dir(): raise SystemExit(f'Missing deliverable directory: {src}')
@@ -63,7 +65,7 @@ def main():
     shutil.copy2(ROOT/'third_party/fune/LICENSE',dest/'Fune-MPL-2.0.txt')
     shutil.copy2(ROOT/'third_party/fune/sdk/LICENSE',dest/'Fune-SDK-MIT.txt')
     files={str(f.relative_to(dest)).replace(os.sep,'/'):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(dest.rglob('*')) if f.is_file()}
-    (dest/'MANIFEST.json').write_text(json.dumps(dict(source_revision=revision,kind=args.kind,hardware_qualified=False,
+    (dest/'MANIFEST.json').write_text(json.dumps(dict(source_revision=revision,source_tree_clean=source_tree_clean,kind=args.kind,hardware_qualified=False,
         note='Target compilation and host qualification do not establish physical FM-1 timing or installation success.',files=files),indent=2)+'\n')
     archive=args.out/(name+'.zip')
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:

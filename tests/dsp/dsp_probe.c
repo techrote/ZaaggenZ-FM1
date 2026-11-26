@@ -2,10 +2,17 @@
 #include "zg/dsp.h"
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 #include <time.h>
 
 int main(int argc,char **argv)
 {
+#ifdef _WIN32
+    if (_setmode(_fileno(stdout), _O_BINARY) == -1) return 4;
+#endif
     zg_native_state ns;zg_character_state cs;zg_dsp_coeffs c;
     zg_dsp_params p={24576,28000,22000,0,0};
     unsigned long i, count=96000;int32_t x,y;

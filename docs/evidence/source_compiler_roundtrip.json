@@ -1,0 +1,49 @@
+{
+  "actual_render_recipe_tests_passed": 9,
+  "compiler_sha256": "e2acd47c1808560a9bc4f7880bae8cac9f53ec199f9baa2f26024566427a6c81",
+  "custom_render_recipe": {
+    "all_128_midi_key_durations_pass": true,
+    "cmake_selected_decoder_pass": true,
+    "decoded_pcm_sha256": "a06c11646f1b4f13ef09868301ea75eedbd3069ccd4a3b74d8cb74657328d1a4",
+    "generated_sha256": "47e2cd32c4f066ca20af348f18d31d84cd238854f1e099bb99b7845e6593bf11",
+    "non_octave_edge_steps_checked": [
+      3092,
+      8191,
+      27095040
+    ],
+    "recipe_sha256": "ba2dc2f7f896472fb9318733c74676346db03d675174a292cb3720a3d5db3a6e",
+    "total_asset_flash_bytes": 34671
+  },
+  "factory_roundtrip": {
+    "generated_sha256": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
+    "identical_generated_bytes": true,
+    "identical_manifest_bytes": true,
+    "manifest_sha256": "854b9b68b5c35830dae79b0233727d81c9a1ae7d3e8e29b82bb7306466ebb29d",
+    "mip_count": 10,
+    "mip_rates_hz": [
+      44100.0,
+      29400.0,
+      22050.0,
+      11025.0,
+      5512.5,
+      2756.25,
+      1378.125,
+      689.0625,
+      344.53125,
+      172.265625
+    ],
+    "non_octave_edge_steps_checked": [
+      3092,
+      8191,
+      27095040
+    ],
+    "total_asset_flash_bytes": 248361
+  },
+  "integrated_ctests_passed": 6,
+  "physical_hardware_qualification": false,
+  "recovered_payload_sha256": "eaf5d3ab822dfa121cd3b795d62619af9e62c041fb02de19f8dbeafb0014c919",
+  "source_decoder_sha256": "4c4e3b5e962224e43e5b8ecb04f959edd73f9e54cd05f207a0f0303287576b25",
+  "source_spec_tests_passed": 5,
+  "status": "PASS",
+  "upstream_commit": "d7e580c190d00e1d00a573a6b845c75ddddc1d4c"
+}

@@ -90,9 +90,13 @@ def analyze(disassembly: Path, symbols: Path) -> dict:
     if not main_loop:
         raise ValueError("Cannot identify common engine sample loop in target binary")
     sample_names = set()
+    sample_unknown = set()
 
     def sample_children(name):
-        if name in sample_names or name not in report:
+        if name not in report:
+            sample_unknown.add(name)
+            return
+        if name in sample_names:
             return
         sample_names.add(name)
         for child in report[name]["direct_calls"]:
@@ -109,7 +113,8 @@ def analyze(disassembly: Path, symbols: Path) -> dict:
         "unknown_direct_calls": sorted(unknown),
         "entry_points": roots,
         "sample_path_divide_instructions": sample_divides,
-        "sample_path_divide_free": not any(sample_divides.values()),
+        "sample_path_unknown_calls": sorted(sample_unknown),
+        "sample_path_divide_free": not sample_unknown and not any(sample_divides.values()),
         "common_engine_loop": main_loop,
         "functions": report,
     }

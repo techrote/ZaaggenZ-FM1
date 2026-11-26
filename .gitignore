@@ -16,3 +16,5 @@ __pycache__/
 .DS_Store
 
 .toolchains/
+windows-smoke.json
+windows-audition.bmp

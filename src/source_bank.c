@@ -26,7 +26,7 @@ const zg_source_info *zg_source_get_info(unsigned index)
 void zg_source_reset(zg_source_state *s, unsigned index)
 {
     s->position_q16 = 0;
-    s->step_q16 = 32768u;
+    s->step_q16 = 65536u;
     s->asset = (uint8_t)(index < zg_source_count ? index : 0u);
     s->mip = 0;
     s->ended = 0;
@@ -39,10 +39,14 @@ void zg_source_reset(zg_source_state *s, unsigned index)
 void zg_source_set_step(zg_source_state *s, uint32_t step)
 {
     unsigned mip = 0;
-    if (step < 4096u) step = 4096u;
-    if (step > 33554432u) step = 33554432u;
+    if (!step) step = 1u;
+    if (step > 67108864u) step = 67108864u;
     s->step_q16 = step;
-    while (mip + 1u < ZG_SOURCE_MIPS && step > (65536u << mip)) ++mip;
+    if (step > 65536u && step <= 98304u) mip=1u;
+    else if (step > 98304u) {
+        mip=2u;
+        while (mip + 1u < ZG_SOURCE_MIPS && step > (65536u << (mip-1u))) ++mip;
+    }
     if (s->mip != mip) {
         s->previous_mip = s->position_q16 ? s->mip : (uint8_t)mip;
         s->mip_fade = (uint8_t)(s->position_q16 ? 0u : 32u);
@@ -53,27 +57,38 @@ void zg_source_set_step(zg_source_state *s, uint32_t step)
 void zg_source_prepare(zg_source_state *s, uint32_t inc, uint32_t fs)
 {
     (void)fs;
-    /* inc * 22050 / (48 * 65536), reduced and split into two 16-bit products.
-     * This is exactly round(inc*7350/2^20), without a 64-bit multiply. All
+    /* inc * 44100 / (48 * 65536), reduced and split into two 16-bit products.
+     * This is exactly round(inc*14700/2^20), without a 64-bit multiply. All
      * intermediate values fit uint32 even at inc=UINT32_MAX; avoids the
      * pi32v2 compiler's wide-multiply/halfword-load hazard entirely. */
     {
-        uint32_t high = (inc >> 16) * 7350u;
-        uint32_t low = (inc & 65535u) * 7350u;
+        uint32_t high = (inc >> 16) * 14700u;
+        uint32_t low = (inc & 65535u) * 14700u;
         uint32_t step = (high >> 4) + ((((high & 15u) << 16) + low + 524288u) >> 20);
         zg_source_set_step(s, step);
     }
 }
 
+static uint32_t two_thirds(uint32_t n)
+{
+    /* Reciprocal series 0x55555555 / 2^32, followed by exact correction.
+     * The residual is bounded; no division, wide multiply or table is used. */
+    uint32_t q=(n>>2)+(n>>4),r;
+    q+=q>>4; q+=q>>8; q+=q>>16;
+    r=n-q*3u; q+=(11u*r)>>5;
+    r=n-q*3u;
+    return q*2u+(r>>1);
+}
+
 static int32_t read_pcm(const zg_source_info *a, unsigned mip, uint32_t pos)
 {
-    uint32_t p = pos >> mip;
+    uint32_t p = mip == 1u ? two_thirds(pos) : pos >> (mip ? mip-1u : 0u);
     uint32_t i = p >> 16;
     uint32_t fraction = (p & 65535u) >> 1;
     int32_t x, y;
     if (i >= a->frames[mip]) return 0;
-    x = a->pcm[mip][i];
-    y = a->pcm[mip][i + 1u]; /* Generated arrays contain a zero guard. */
+    x = zg_source_decode_table[a->pcm[mip][i]];
+    y = zg_source_decode_table[a->pcm[mip][i + 1u]]; /* Zero guard. */
     return x + trunc_shift15((y - x) * (int32_t)fraction);
 }
 
@@ -115,8 +130,8 @@ int32_t zg_source_sample(zg_source_state *s, int gate, int sustain)
             uint32_t offset = pos - blend_begin;
             uint32_t other = (a->loop_start << 16) + offset;
             int32_t next = read_source(s, a, other);
-            /* Q16 position / 512 samples -> Q15 crossfade. */
-            int32_t weight = (int32_t)(offset >> 10);
+            /* Q16 position / 1024 samples -> Q15 crossfade. */
+            int32_t weight = (int32_t)(offset >> 11);
             value += trunc_shift15((next - value) * weight);
         }
         pos += s->step_q16;
