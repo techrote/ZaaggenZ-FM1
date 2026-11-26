@@ -7,6 +7,12 @@ and recovery details are in [FM-1 installation](fm1-install.md).
 
 ## Install and keep recovery available
 
+Start from the compatible **Fune v0.0.2-alpha** host. The official firmware
+download, exact hash, stock-bootloader requirement and flash-chip qualification
+boundary are recorded in [FM-1 installation](fm1-install.md). The `.kpl` package
+does not install that host firmware. The published prerequisite is available,
+but it does not establish a physical ZaaggenZ plugin pass.
+
 Run these commands from the extracted FM-1 bundle. Use Python 3 with `pyserial`
 and the FM-1's actual serial port:
 

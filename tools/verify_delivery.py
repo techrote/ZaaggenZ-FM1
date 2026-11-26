@@ -7,6 +7,7 @@ application, exercises controls/MIDI handlers and exports real core audio.
 from __future__ import annotations
 import argparse
 import hashlib
+from html.parser import HTMLParser
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -16,6 +17,7 @@ import subprocess
 import sys
 import wave
 import zipfile
+from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -101,11 +103,31 @@ def main():
                   archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
                   verified_files=len(manifest['files']), path_with_spaces=True,
                   physical_hardware_qualified=False)
+    class AudioIndex(HTMLParser):
+        def __init__(self): super().__init__();self.sources=[]
+        def handle_starttag(self, tag, attrs):
+            if tag == 'audio': self.sources.append(dict(attrs).get('src', ''))
+    listen=directory/'Listen.html'
+    expected_audio={path.relative_to(directory).as_posix()
+                    for folder in ['auditions','fune-songs','architecture-comparison']
+                    for path in (directory/folder).glob('*.wav')}
+    if expected_audio and not listen.is_file(): raise ValueError('Missing listening index for packaged audio')
+    if listen.exists():
+        index=AudioIndex();index.feed(listen.read_text(encoding='utf-8'))
+        indexed={unquote(name) for name in index.sources}
+        if indexed != expected_audio or len(index.sources) != len(expected_audio):
+            raise ValueError('Listening index has missing, duplicate or unexpected recordings')
+        for name in index.sources:
+            if not (directory/unquote(name)).is_file(): raise ValueError(f'Broken audio index entry: {name}')
+        report['indexed_recordings']=len(index.sources)
     if args.kind == 'fm1':
         report['offline_plugin_check'] = run([sys.executable, 'tools/install_fune.py',
                                              'check', 'zaaggenz.kpl'], directory).strip()
         run([sys.executable, 'tools/observe_fm1.py', '--help'], directory)
         for folder, key, count in [('fune-presets', 'presets', 36), ('fune-songs', 'songs', 6)]:
+            if manifest.get('source_bank', {}).get('kind') == 'custom' and not (directory/folder).exists():
+                report[key] = 0
+                continue
             assets = json.loads((directory/folder/'manifest.json').read_text())[key]
             if len(assets) != count: raise ValueError(f'Incomplete {folder}')
             report[key] = count

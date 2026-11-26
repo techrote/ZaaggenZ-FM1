@@ -17,7 +17,7 @@ Download the Windows package from the latest successful **Native instrument qual
 
 The initial sound uses a preserved source image with live character processing. It retains the authored transient and measured lower host cost. Native and hybrid paths remain distinct musical choices; desktop timing does not establish FM-1 polyphony.
 
-The [playing guide](docs/playbook.md) gives a short audition route, family-specific gestures, layer behavior and tuning examples. The FM-1 package also includes six playable Fune demo songs and their actual-host WAV renders.
+The [playing guide](docs/playbook.md) gives a short audition route, family-specific gestures, layer behavior and tuning examples. Each audio package has a local `Listen.html` index with named recordings and search. The FM-1 package also includes six playable Fune demo songs and their actual-host WAV renders.
 
 ## Implemented instrument
 
@@ -70,6 +70,8 @@ python tools/export_fune_songs.py
 The vendor compiler download is pinned and hash checked. For acoustic/reference tests, install `requirements-reference.txt` and use the commands in the [qualification workflow](.github/workflows/qualify.yml). Audition material is rendered by compiled C, not a separate Python synth.
 
 See [reference fidelity and compiler usage](docs/reference-fidelity.md), [native mechanisms and measurements](docs/native-dsp.md), and `assets/source_bank_manifest.json`. The manifest records exact recipes, source/render hashes, numeric tool versions, common scaling and representation metrics. `tools/compare_architectures.py` produces source/reference/native comparisons. `tests/test_auditions.py` checks all 36 actual-C sounds for audibility, clipping, tail completion and spectral diversity.
+
+The [architecture decision and qualification record](docs/qualification.md) brings the resource measurements, audio evidence, package checks and remaining physical acceptance together.
 
 `examples/locked_bloom_render_recipe.json` demonstrates real desktop recipe import. Custom banks go to a separate directory by default. Unsupported owner domains are rejected explicitly rather than silently dropping their responsibilities.
 

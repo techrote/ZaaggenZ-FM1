@@ -228,6 +228,25 @@ python tools/validate_source_bank.py --source-probe build/source_probe --full-mi
 python -m unittest discover -s tests -p test_source_compiler.py
 ```
 
+The complete compiler qualification regenerates the factory include and
+manifest in an isolated directory, compiles the actual example RenderRecipe,
+builds its custom C decoder with CMake, and checks its decoded byte hashes,
+release behavior and keyboard-range durations:
+
+```sh
+python -m pip install -r requirements-reference.txt
+python tools/qualify_source_compiler.py --reference .upstream/zaaggenz \
+  --out build/source-compiler-qualification.json
+```
+
+Generated source bytes and all non-provenance manifest content must match
+exactly. Only the explicitly named Python, NumPy and SciPy version fields may
+differ; the receipt records both toolchains and both raw manifest hashes.
+`--strict-toolchain` also requires full manifest byte identity. A clean virtual
+environment installed only from the requirements file passed this command and
+the actual reference-import tests; JSON Schema validation dependencies are
+explicitly included.
+
 `assets/source_recipes.json` is the explicit desktop-to-embedded source recipe
 list. The compiler admits 1–8 selected inspected source IDs, verifies the pinned
 reference revision and recovered payload, rejects unrecognized fields, enforces
@@ -287,6 +306,21 @@ generated source names/count, including an eighth source when present. A custom
 bank's indices and preset selections should still be authored together: factory
 indices are reduced modulo the selected bank count, and compiling a bank does
 not invent new musical preset names or assignments.
+
+When packaging a custom target, pass the manifest from the same compiler run.
+The packager checks its generated-bank hash against the target build receipt:
+
+```sh
+python tools/build_fune.py \
+  --source-bank build/custom-bank/source_bank_data.inc \
+  --work build/fm1-custom/sdk-work --output build/fm1-custom/zaaggenz.kpl
+python tools/package_delivery.py --kind fm1 --build build/fm1-custom \
+  --source-manifest build/custom-bank/source_bank_manifest.json \
+  --out dist/custom
+```
+
+Factory presets and songs should be re-authored for custom source indices before
+adding them to a custom package; the packager does not invent those assignments.
 
 Compilation with NumPy 2.3.5 and SciPy 1.17.0 reproduced the generated bank
 byte-for-byte. The observed runtime was Python 3.12.14; the upstream project

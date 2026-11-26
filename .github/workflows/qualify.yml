@@ -41,6 +41,7 @@ jobs:
           git clone https://github.com/techrote/zaaggenz.git .upstream/zaaggenz
           git -C .upstream/zaaggenz checkout --detach d7e580c190d00e1d00a573a6b845c75ddddc1d4c
           python -m unittest discover -s tests -p test_reference_import.py -v
+          python tools/qualify_source_compiler.py --reference .upstream/zaaggenz --out build/source-compiler-qualification.json
           python tools/compare_architectures.py --reference .upstream/zaaggenz --source-probe build/host/source-probe --native-probe build/host/dsp-probe --out build/comparison
       - name: Address and undefined-behavior sanitizers
         env:
@@ -65,6 +66,7 @@ jobs:
             build/soak.json
             build/package-linux.json
             build/source-decoder.json
+            build/source-compiler-qualification.json
             build/presets.json
           if-no-files-found: error
           retention-days: 90

@@ -18,6 +18,30 @@ Its source supports loadable `.kpl` images, whereas older introductory paragraph
 in its SDK manual describe an earlier built-in-only stage. This project follows
 the actual image builder and loader at the pinned revision.
 
+This is also the exact commit tagged **Fune v0.0.2-alpha**, released on
+19 November 2026. Its compatible FM-1 firmware is publicly available; compiling
+an unreleased host is not an installation prerequisite. Use the
+[official v0.0.2-alpha release](https://github.com/hugelton/Fune/releases/tag/v0.0.2-alpha)
+and its [FM-1 firmware image](https://github.com/hugelton/Fune/releases/download/v0.0.2-alpha/fune-fm1.fwsc),
+or the [official Fune web installer](https://hugelton.com/fune/install/).
+The release describes that download as the same image used by the web installer.
+For this qualified software baseline, verify the selected version rather than
+assuming a future web-installer update is identical.
+
+The downloaded `fune-fm1.fwsc` is **612,223 bytes**, with SHA-256:
+
+```text
+12bd8bc3610694b91943ae6f6f1220495cb11179fd6405553f2196c479d530db
+```
+
+An independent, unchanged build of that Fune source also passed its target gates.
+Its linker reserves the expected 2 KiB plugin RAM pool and keeps the application,
+plugin flash, update staging and save regions separate. The published image's
+plugin validation/loading routines match the rebuilt machine code. The
+[firmware prerequisite receipt](evidence/fune_firmware_prerequisite.json) records
+the hashes and memory bounds. This verifies the available host prerequisite;
+physical installation and real-time plugin performance remain unqualified.
+
 | Item | Verified contract |
 | --- | --- |
 | Processor | JieLi AC791N/WL82, pi32v2; no hardware floating-point unit |
@@ -74,12 +98,16 @@ are CHARACTER, GRIT, MOTION and VOWEL. Turn SELECT to reach the next row, then
 choose a sound with PRST. The image contains all 36 sounds; no user preset slots
 are needed merely to use them.
 
-If the FM-1 currently runs stock firmware, use
-[Fune's own installation instructions](https://github.com/hugelton/Fune/blob/dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b/docs/FM1_INSTALL.md)
-to establish a supported Fune installation first. Fune requires M-VAVE's stock
-bootloader and refuses modified bootloaders. The pinned upstream README reports
-earlier flash-chip units tested, newer chips expected but untested. ZaaggenZ does
-not supply a bootloader modification or claim compatibility with Felucca images.
+If the FM-1 currently runs stock firmware, install the compatible Fune release
+above before using these plugin commands. Fune's release recommends its web
+installer in Chrome or Edge over USB MIDI. Its current release requirements are
+**M-VAVE's official bootloader**, with testing reported only on earlier-flash
+units; it says it is not compatible with Felucca or derived custom firmware.
+Read those release requirements before following the older detailed
+[upstream installation document](https://github.com/hugelton/Fune/blob/dc1eb1b15a6bc108e09098e554ea8b0a7dbe8a1b/docs/FM1_INSTALL.md),
+which retains some superseded prerelease wording. Establish the supported Fune
+baseline first. ZaaggenZ supplies no bootloader modification or custom-firmware
+migration procedure.
 
 ## Performance controls
 

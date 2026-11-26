@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import zipfile
+from write_audition_index import write_index
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,16 +22,40 @@ def main():
     p.add_argument('--comparison', type=Path)
     p.add_argument('--presets', type=Path)
     p.add_argument('--songs', type=Path)
+    p.add_argument('--source-manifest', type=Path,
+                   help='Compiler manifest for a custom bank; required for custom FM-1 packages')
     args = p.parse_args()
     revision = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     source_tree_clean = not subprocess.check_output(
         ['git','status','--porcelain','--untracked-files=normal'],cwd=ROOT,text=True).strip()
-    name = f'ZaaggenZ-FM1-{args.kind}-{revision[:8]}'
+    source_manifest = args.source_manifest or ROOT/'assets/source_bank_manifest.json'
+    provenance = json.loads(source_manifest.read_text())
+    bank_kind = 'custom' if args.source_manifest else 'factory'
+    if args.kind == 'fm1':
+        if not (args.build/'zaaggenz.kpl').exists(): raise SystemExit('Missing compiled FM-1 plugin')
+        target = json.loads((args.build/'zaaggenz.json').read_text())
+        if target['source_bank']['kind'] == 'custom' and args.source_manifest is None:
+            raise SystemExit('Custom FM-1 delivery requires --source-manifest from that compiler run')
+        if provenance['generated_sha256'] != target['source_bank']['sha256']:
+            raise SystemExit('Source provenance does not match the bank compiled into this plugin')
+        if hashlib.sha256((args.build/'zaaggenz.kpl').read_bytes()).hexdigest() != target['artifact_sha256']:
+            raise SystemExit('Plugin bytes differ from their target qualification report')
+        bank_kind = target['source_bank']['kind']
+    elif (args.build/'CMakeCache.txt').is_file():
+        for line in (args.build/'CMakeCache.txt').read_text().splitlines():
+            if line.startswith('ZG_SOURCE_BANK_FILE:FILEPATH=') and line.split('=',1)[1]:
+                bank_kind = 'custom'
+                if args.source_manifest is None:
+                    raise SystemExit('Custom desktop delivery requires --source-manifest from that compiler run')
+                generated=Path(line.split('=',1)[1])
+                if hashlib.sha256(generated.read_bytes()).hexdigest() != provenance['generated_sha256']:
+                    raise SystemExit('Custom source manifest differs from the configured source bank')
+    suffix = '-bank-' + provenance['generated_sha256'][:8] if bank_kind == 'custom' else ''
+    name = f'ZaaggenZ-FM1-{args.kind}-{revision[:8]}{suffix}'
     dest = args.out / name
     if dest.exists(): shutil.rmtree(dest)
     dest.mkdir(parents=True)
     if args.kind == 'fm1':
-        if not (args.build/'zaaggenz.kpl').exists(): raise SystemExit('Missing compiled FM-1 plugin')
         for f in args.build.glob('zaaggenz*'):
             if f.is_file(): shutil.copy2(f,dest/f.name)
         # Installer dependencies remain at their original relative locations.
@@ -61,11 +86,13 @@ def main():
         shutil.copy2(ROOT/f,dest/f)
     shutil.copytree(ROOT/'docs',dest/'docs')
     shutil.copytree(ROOT/'presets',dest/'preset-recipes')
-    shutil.copy2(ROOT/'assets/source_bank_manifest.json',dest/'source-bank-provenance.json')
+    shutil.copy2(source_manifest,dest/'source-bank-provenance.json')
     shutil.copy2(ROOT/'third_party/fune/LICENSE',dest/'Fune-MPL-2.0.txt')
     shutil.copy2(ROOT/'third_party/fune/sdk/LICENSE',dest/'Fune-SDK-MIT.txt')
+    write_index(dest)
     files={str(f.relative_to(dest)).replace(os.sep,'/'):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(dest.rglob('*')) if f.is_file()}
     (dest/'MANIFEST.json').write_text(json.dumps(dict(source_revision=revision,source_tree_clean=source_tree_clean,kind=args.kind,hardware_qualified=False,
+        source_bank=dict(kind=bank_kind,generated_sha256=provenance['generated_sha256'],sources=len(provenance['sources'])),
         note='Target compilation and host qualification do not establish physical FM-1 timing or installation success.',files=files),indent=2)+'\n')
     archive=args.out/(name+'.zip')
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:

@@ -1,0 +1,81 @@
+{
+  "checked_in_factory_inputs_unchanged": true,
+  "clean_environment": {
+    "cmake_native_binary_used": true,
+    "created_from_requirements_only": true,
+    "distributions": {
+      "attrs": "26.1.0",
+      "jsonschema": "4.26.0",
+      "jsonschema-specifications": "2025.9.1",
+      "numpy": "2.3.5",
+      "pip": "25.0.1",
+      "referencing": "0.37.0",
+      "rpds-py": "2026.9.1",
+      "scipy": "1.17.0",
+      "typing_extensions": "4.16.0"
+    },
+    "python_version": "3.12.14",
+    "pythonpath_removed": true,
+    "reference_import_tests_passed": 9,
+    "requirements_sha256": "9d392af92bbbf3ac61177345fa9864ee15c3ba61d3c7e7bc636469703b2a392d",
+    "source_spec_tests_passed": 5,
+    "system_site_packages": false,
+    "user_site_enabled": false
+  },
+  "compiler_sha256": "e2acd47c1808560a9bc4f7880bae8cac9f53ec199f9baa2f26024566427a6c81",
+  "custom": {
+    "decoder_conformance": {
+      "decoder_bytes": [
+        {
+          "bytes": 25648,
+          "sha256": "a06c11646f1b4f13ef09868301ea75eedbd3069ccd4a3b74d8cb74657328d1a4",
+          "source_id": "compiled.ba2dc2f7f896"
+        }
+      ],
+      "format_version": 2,
+      "generated_sha256": "47e2cd32c4f066ca20af348f18d31d84cd238854f1e099bb99b7845e6593bf11",
+      "midi_keys_checked": 128,
+      "non_octave_edge_steps_checked": [
+        3092,
+        8191,
+        27095040
+      ],
+      "qualification": "host C decode; not hardware timing or listening qualification",
+      "status": "PASS"
+    },
+    "generated_sha256": "47e2cd32c4f066ca20af348f18d31d84cd238854f1e099bb99b7845e6593bf11",
+    "recipe_file_sha256": "7941321ff0d123cf794e20cbbdedb9643a2e27394d52e75143bd0fc507222466",
+    "source_bank_ctest_pass": true,
+    "total_asset_flash_bytes": 34671
+  },
+  "factory": {
+    "allowed_provenance_differences": [
+      "toolchain.numpy",
+      "toolchain.python",
+      "toolchain.scipy"
+    ],
+    "generated_sha256": "747fd2a5dcd8de1c64a10b6f051521325de943b9d02a1b32db9afb326b759b03",
+    "identical_generated_bytes": true,
+    "identical_manifest_bytes": true,
+    "identical_manifest_content_excluding_toolchain": true,
+    "mip_count": 10,
+    "observed_toolchain": {
+      "numpy": "2.3.5",
+      "python": "3.12.14",
+      "scipy": "1.17.0"
+    },
+    "recorded_manifest_sha256": "854b9b68b5c35830dae79b0233727d81c9a1ae7d3e8e29b82bb7306466ebb29d",
+    "recorded_toolchain": {
+      "numpy": "2.3.5",
+      "python": "3.12.14",
+      "scipy": "1.17.0"
+    },
+    "regenerated_manifest_sha256": "854b9b68b5c35830dae79b0233727d81c9a1ae7d3e8e29b82bb7306466ebb29d",
+    "total_asset_flash_bytes": 248361
+  },
+  "physical_hardware_qualification": false,
+  "qualification": "Actual compiler CLI, real RenderRecipe, native CMake C decoder; no hardware claim",
+  "source_decoder_sha256": "4c4e3b5e962224e43e5b8ecb04f959edd73f9e54cd05f207a0f0303287576b25",
+  "status": "PASS",
+  "upstream_commit": "d7e580c190d00e1d00a573a6b845c75ddddc1d4c"
+}
